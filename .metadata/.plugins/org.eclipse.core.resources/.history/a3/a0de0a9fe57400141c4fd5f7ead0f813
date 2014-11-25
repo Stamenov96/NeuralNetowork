@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <layer-list xmlns:android="http://schemas.android.com/apk/res/android" > -->
+    <ImageButton
+    android:layout_width="@dimen/large_brush"
+    android:layout_height="@dimen/large_brush"
+    android:layout_margin="2dp"
+    android:background="#FF660000"
+    android:contentDescription="@string/paint"
+    android:onClick="paintClicked"
+    android:src="@drawable/paint"
+    android:tag="#FF660000" />
+    
+    
+
+<!-- </layer-list> -->

@@ -1,0 +1,5 @@
+INDEX VERSION 1.126+/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/.metadata/.plugins/org.eclipse.jdt.core
+2033628785.index
+3735244064.index
+4078275444.index
+1270315800.index
