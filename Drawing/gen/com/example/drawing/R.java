@@ -956,6 +956,9 @@ containing a value of this type.
          */
         public static final int activity_horizontal_margin=0x7f070015;
         public static final int activity_vertical_margin=0x7f070016;
+        /**  Brush sizes 
+         */
+        public static final int brush=0x7f070017;
         /**  The platform's desired fixed height for a dialog along the major axis
          (the screen is in portrait). This may be either a fraction or a dimension.
  The platform's desired fixed height for a dialog along the major axis
@@ -988,11 +991,6 @@ containing a value of this type.
          (the screen is in portrait). This may be either a fraction or a dimension.
          */
         public static final int dialog_fixed_width_minor=0x7f070012;
-        public static final int large_brush=0x7f070019;
-        public static final int medium_brush=0x7f070018;
-        /**  Brush sizes 
-         */
-        public static final int small_brush=0x7f070017;
     }
     public static final class drawable {
         public static final int abc_ab_bottom_solid_dark_holo=0x7f020000;
@@ -1082,13 +1080,12 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int brush=0x7f020057;
-        public static final int eraser=0x7f020058;
-        public static final int ic_launcher=0x7f020059;
-        public static final int new_pic=0x7f02005a;
-        public static final int paint=0x7f02005b;
-        public static final int paint_pressed=0x7f02005c;
-        public static final int save=0x7f02005d;
+        public static final int background=0x7f020057;
+        public static final int brush=0x7f020058;
+        public static final int eraser=0x7f020059;
+        public static final int ic_launcher=0x7f02005a;
+        public static final int new_pic=0x7f02005b;
+        public static final int save=0x7f02005c;
     }
     public static final class id {
         public static final int action_bar=0x7f09001c;
@@ -1102,7 +1099,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f090002;
         public static final int action_menu_presenter=0x7f090003;
         public static final int action_mode_close_button=0x7f090024;
-        public static final int action_settings=0x7f090042;
+        public static final int action_settings=0x7f09003e;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f090016;
@@ -1111,12 +1108,10 @@ containing a value of this type.
         public static final int default_activity_button=0x7f090028;
         public static final int dialog=0x7f090014;
         public static final int disableHome=0x7f090009;
-        public static final int draw_btn=0x7f09003d;
-        public static final int drawing=0x7f090040;
+        public static final int drawing=0x7f09003d;
         public static final int dropdown=0x7f090015;
         public static final int edit_query=0x7f090030;
         public static final int end=0x7f090017;
-        public static final int erase_btn=0x7f09003e;
         public static final int expand_activities_button=0x7f090026;
         public static final int expanded_menu=0x7f09002c;
         public static final int home=0x7f090000;
@@ -1128,14 +1123,12 @@ containing a value of this type.
         public static final int list_item=0x7f090029;
         public static final int middle=0x7f090018;
         public static final int never=0x7f090012;
-        public static final int new_btn=0x7f09003c;
         public static final int none=0x7f090019;
         public static final int normal=0x7f090007;
-        public static final int paint_colors=0x7f090041;
         public static final int progress_circular=0x7f090004;
         public static final int progress_horizontal=0x7f090005;
         public static final int radio=0x7f09002f;
-        public static final int save_btn=0x7f09003f;
+        public static final int save_btn=0x7f09003c;
         public static final int search_badge=0x7f090032;
         public static final int search_bar=0x7f090031;
         public static final int search_button=0x7f090033;
@@ -1183,9 +1176,7 @@ containing a value of this type.
          showAsAction="ifRoom" items can fit. "always" items can override this. 
          */
         public static final int abc_max_action_buttons=0x7f080000;
-        public static final int large_size=0x7f080003;
-        public static final int medium_size=0x7f080002;
-        public static final int small_size=0x7f080001;
+        public static final int size=0x7f080001;
     }
     public static final class layout {
         public static final int abc_action_bar_decor=0x7f030000;
@@ -1261,12 +1252,9 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000f;
         public static final int app_name=0x7f0a000d;
-        public static final int brush=0x7f0a0011;
-        public static final int erase=0x7f0a0012;
         public static final int hello_world=0x7f0a000e;
-        public static final int paint=0x7f0a0014;
-        public static final int save=0x7f0a0013;
-        public static final int start_new=0x7f0a0010;
+        public static final int paint=0x7f0a0010;
+        public static final int save=0x7f0a0011;
     }
     public static final class style {
         /** 

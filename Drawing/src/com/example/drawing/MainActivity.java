@@ -2,89 +2,77 @@ package com.example.drawing;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import java.util.UUID;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import android.provider.MediaStore;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
 
+	private File appDir;
 	private DrawingView drawView;
-	private ImageButton currPaint, saveBtn;
+	// private ImageButton currPaint;
+	private ImageButton saveBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		drawView = (DrawingView) findViewById(R.id.drawing);
-		LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
-		currPaint = (ImageButton) paintLayout.getChildAt(0);
-		currPaint.setImageDrawable(getResources().getDrawable(
-				R.drawable.paint_pressed));
+		
 		saveBtn = (ImageButton) findViewById(R.id.save_btn);
 		saveBtn.setOnClickListener(this);
 
+		appDir = new File(Environment.getExternalStorageDirectory()
+				+ File.separator + "SaveDir");
+
+		if (!appDir.exists() && !appDir.isDirectory()) {
+			appDir.mkdirs();
+		}
+
 	}
+	
+	
+	
+	
 
 	public void onClick(View view) {
-		if (view.getId() == R.id.save_btn) {
-			AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-			saveDialog.setTitle("Save drawing");
-			saveDialog.setMessage("Save drawing to device Gallery?");
-			saveDialog.setPositiveButton("Yes",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							drawView.setDrawingCacheEnabled(true);
-							String imgSaved = MediaStore.Images.Media
-									.insertImage(getContentResolver(), drawView
-											.getDrawingCache(), UUID
-											.randomUUID().toString() + ".png",
-											"drawing");
-							if (imgSaved != null) {
-								Toast savedToast = Toast.makeText(
-										getApplicationContext(),
-										"Drawing saved to Gallery!",
-										Toast.LENGTH_SHORT);
-								savedToast.show();
-							} else {
-								Toast unsavedToast = Toast.makeText(
-										getApplicationContext(),
-										"Oops! Image could not be saved.",
-										Toast.LENGTH_SHORT);
-								unsavedToast.show();
-							}
-							drawView.destroyDrawingCache();
-						}
-						
-					});
-			saveDialog.setNegativeButton("Cancel",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-						}
-					});
-			saveDialog.show();
-		}
-	}
 
-	public void paintClicked(View view) {
-		if (view != currPaint) {
-			ImageButton imgView = (ImageButton) view;
-			String color = view.getTag().toString();
-			drawView.setColor(color);
-			imgView.setImageDrawable(getResources().getDrawable(
-					R.drawable.paint_pressed));
-			currPaint.setImageDrawable(getResources().getDrawable(
-					R.drawable.paint));
-			currPaint = (ImageButton) view;
+		if (view.getId() == R.id.save_btn) {
+			// System.out.println(appDir+"APPP DIRRR");
+			String path = appDir.toString();
+			// System.out.println(path+"PATHHHHHHHH");
+			OutputStream fOut = null;
+			File file = new File(path, "newpic.jpg"); // the File to save to
+			try {
+				fOut = new FileOutputStream(file);
+
+				drawView.setDrawingCacheEnabled(true);
+				Bitmap pictureBitmap = drawView.getDrawingCache();
+				pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+				fOut.flush();
+				fOut.close();
+			} catch (IOException e) {
+				Log.e("PictureDemo", "Exception in photoCallback", e);
+			}
+
+			try {
+				MediaStore.Images.Media.insertImage(getContentResolver(),
+						file.getAbsolutePath(), file.getName(), file.getName());
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
