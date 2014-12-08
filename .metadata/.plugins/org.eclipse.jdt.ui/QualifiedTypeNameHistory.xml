@@ -25,11 +25,12 @@
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="android.support.v4.widget.SearchViewCompatIcs.MySearchView"/>
 <fullyQualifiedTypeName name="com.example.drawing.MainActivity"/>
-<fullyQualifiedTypeName name="java.lang.String"/>
 <fullyQualifiedTypeName name="android.provider.MediaStore"/>
 <fullyQualifiedTypeName name="android.provider.MediaStore.Images"/>
 <fullyQualifiedTypeName name="android.provider.MediaStore.Images.Media"/>
 <fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.content.ContentResolver"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="org.exampl.neuralnet.Helpers"/>
 </qualifiedTypeNameHistroy>
