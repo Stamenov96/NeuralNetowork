@@ -1,19 +1,24 @@
 package com.example.drawing;
 
 import android.support.v7.app.ActionBarActivity;
+
 import android.os.Bundle;
 import android.os.Environment;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import android.provider.MediaStore;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.view.View.OnClickListener;
 
@@ -53,25 +58,20 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			// System.out.println(appDir+"APPP DIRRR");
 			String path = appDir.toString();
 			// System.out.println(path+"PATHHHHHHHH");
-			OutputStream fOut = null;
-			File file = new File(path, "newpic.jpg"); // the File to save to
+			OutputStream fOut;
+			File file = new File(path, "newpic.jpeg"); // the File to save to
 			try {
 				fOut = new FileOutputStream(file);
 
 				drawView.setDrawingCacheEnabled(true);
+				
 				Bitmap pictureBitmap = drawView.getDrawingCache();
 				pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
 				fOut.flush();
 				fOut.close();
+				
 			} catch (IOException e) {
 				Log.e("PictureDemo", "Exception in photoCallback", e);
-			}
-
-			try {
-				MediaStore.Images.Media.insertImage(getContentResolver(),
-						file.getAbsolutePath(), file.getName(), file.getName());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			}
 		}
 	}
@@ -95,4 +95,5 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 }
