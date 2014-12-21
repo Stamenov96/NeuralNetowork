@@ -12,19 +12,19 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import android.provider.MediaStore;
-import android.content.Context;
-import android.content.ContextWrapper;
+//import android.provider.MediaStore;
+//import android.content.Context;
+//import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.view.View.OnClickListener;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
 
-	private File appDir;
+	static File appDir;
 	private DrawingView drawView;
 	// private ImageButton currPaint;
 	private ImageButton saveBtn;
@@ -45,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		if (!appDir.exists() && !appDir.isDirectory()) {
 			appDir.mkdirs();
 		}
+		
+		NeuralNetworksProgram.main(null);
 
 	}
 	
@@ -59,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			String path = appDir.toString();
 			// System.out.println(path+"PATHHHHHHHH");
 			OutputStream fOut;
+			//File file = new File(path,(new Date().getTime()+".jpeg")); // the File to save to
 			File file = new File(path, "newpic.jpeg"); // the File to save to
 			try {
 				fOut = new FileOutputStream(file);

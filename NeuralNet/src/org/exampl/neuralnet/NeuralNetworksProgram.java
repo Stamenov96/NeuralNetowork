@@ -1,5 +1,20 @@
 package org.exampl.neuralnet;
 
+import java.awt.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class NeuralNetworksProgram {
 	public static void main(String[] args) {
 		{
@@ -14,9 +29,89 @@ public class NeuralNetworksProgram {
 						.println("Using tanh function for hidden-to-output activation");
 				NeuralNetwork nn = new NeuralNetwork(3, 4, 2);
 
-				double[] weights = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
-						0.7, 0.8, 0.9, 1.0, 1.1, 1.2, -2.0, -6.0, -1.0, -7.0,
-						1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, -2.5, -5.0 };
+				double[] weightsbase = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5,
+						0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, -2.0, -6.0, -1.0,
+						-7.0, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, -2.5,
+						-5.0 };
+
+				// try {
+				File statText = new File("/home/stefo/Desktop/statsTest.txt");
+				FileWriter out = new FileWriter(statText);
+				for (int i = 0; i < weightsbase.length; i++) {
+					out.write(Double.toString(weightsbase[i]) + "\n");
+				}
+				out.close();
+
+				Scanner scan = new Scanner(statText);
+				ArrayList<String> temps = new ArrayList<String>();
+
+				int count = 0;
+				while (scan.hasNext()) {
+					String line = scan.nextLine();
+					count++;
+				}
+
+				Scanner newscan = new Scanner(statText);
+				System.out.println(">>>>>>" + count);
+				double[] weights = new double[count];
+				for (int i = 0; i < count; i++) {
+					String line = newscan.nextLine();
+					weights[i] = Double.parseDouble(line);
+				}
+				// System.out.println("---------------------");
+				// Helpers.ShowVector(sc);
+				// System.out.println("---------------------");
+				// while(scan.hasNext()){
+				//
+				// String line = scan.nextLine();
+				// String[] numStrings = line.split(", ");
+				// // parse number string into doubles
+				// double[] nums = new double[numStrings.length];
+				//
+				// for (int i = 0; i < nums.length; i++){
+				// nums[i] = Double.parseDouble(numStrings[i]);
+				// }
+				// }
+
+				// FileInputStream input = new FileInputStream(statText);
+				// DataInputStream datainput = new DataInputStream(input);
+				// double d =datainput.readDouble();
+				// System.out.println("DOUBLE : "+d+"<<<<<<<<");
+				// datainput.close();
+
+				// Scanner in = new Scanner(statText);
+				// int i=0;
+				// double [] ary = null;
+				// while (in.hasNextLine()) {
+				// ary[i++]=in.nextDouble();
+				//
+				// }
+				// Scanner s = new Scanner(statText);
+				// String line = s.next();
+				// double gotDouble = Double.parseDouble(line);
+				// System.out.println("DOUBLE::"+gotDouble);
+
+				// Scanner s = new Scanner(statText);
+				// double[] arr = new double[s.nextDouble()];
+				// int[] array = new int[s.nextInt()];
+				// for (int i = 0; i < array.length; i++)
+				// array[i] = s.nextInt();
+
+				// FileOutputStream is = new FileOutputStream(statText);
+				// OutputStreamWriter osw = new OutputStreamWriter(is);
+				// Writer w = new BufferedWriter(osw);
+				// for (int i = 0; i < weights.length; i++) {
+				// w.write(weights[i].toString);
+				// }
+				//
+				// w.write("POTATO!!!");
+				// w.close();
+				// } catch (IOException e) {
+				// System.err.println("Problem writing to the file statsTest.txt");
+				// }
+
+				// writer write = new writer();
+				// write.writing();
 
 				System.out.println("\nWeights and biases are:");
 				Helpers.ShowVector(weights);
@@ -86,7 +181,15 @@ public class NeuralNetworksProgram {
 				System.out.println("\nBest weights and biases found:");
 				double[] bestWeights = nn.GetWeights();
 				Helpers.ShowVector(bestWeights);
-
+				
+				File newweights = new File("/home/stefo/Desktop/statsTest.txt");
+				FileWriter newout = new FileWriter(newweights);
+				for (int i = 0; i < bestWeights.length; i++) {
+					newout.write(Double.toString(bestWeights[i]) + "\n");
+				}
+				newout.close();
+				
+				
 				System.out.println("End Neural Network demo\n");
 				// Console.ReadLine();
 			} catch (Exception ex) {

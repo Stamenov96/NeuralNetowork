@@ -114,8 +114,8 @@ class NeuralNetwork {
 			// add biases to input-to-hidden sums
 			ihSums[i] += ihBiases[i];
 		
-		System.out.println("\ninput-to-hidden sums after adding i-h biases:");
-		Helpers.ShowVector(this.ihSums);
+		//System.out.println("\ninput-to-hidden sums after adding i-h biases:");
+		//Helpers.ShowVector(this.ihSums);
 
 		for (int i = 0; i < numHidden; ++i)
 			// determine input-to-hidden output
@@ -143,12 +143,12 @@ class NeuralNetwork {
 			// add biases to input-to-hidden sums
 			hoSums[i] += hoBiases[i];
 
-		System.out.println("hidden-to-output sums after adding h-o biases:");
-		Helpers.ShowVector(this.hoSums);
+		//System.out.println("hidden-to-output sums after adding h-o biases:");
+		//Helpers.ShowVector(this.hoSums);
 
 		for (int i = 0; i < numOutput; ++i)
 			// determine hidden-to-output result
-			this.outputs[i] = HyperTanFunction(hoSums[i]);
+			this.outputs[i] = SoftmaxFunction(hoSums[i],hoBiases);
 
 		double[] result = new double[numOutput];
 		result = this.outputs;
@@ -253,13 +253,21 @@ class NeuralNetwork {
 			return 1.0 / (1.0 + Math.exp(-x));
 	}
 
-	private double HyperTanFunction(double x) {
+	private double SoftmaxFunction(double x, double[] hoBiases2) {
 		if (x < -10.0)
 			return -1.0;
 		else if (x > 10.0)
 			return 1.0;
-		else
-			return Math.tanh(x);
+		else{
+			//return Math.tanh(x);
+			//double z = Math.exp(x)/()
+			double sum=0;
+			for (int i = 0; i < hoBiases2.length; i++) {
+				sum=Math.exp(hoBiases2[i]);
+			}
+			
+			return (Math.exp(x)/sum);	
+		}
 	}
 
 } // class NeuralNetwork

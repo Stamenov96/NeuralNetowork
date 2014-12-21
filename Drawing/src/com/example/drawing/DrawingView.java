@@ -1,30 +1,30 @@
 package com.example.drawing;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+//import java.io.FileNotFoundException;
+//import java.io.FileOutputStream;
+//import java.io.IOException;
+//import java.io.OutputStream;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+//import android.app.AlertDialog;
+//import android.app.Dialog;
+//import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 //import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Environment;
-import android.provider.MediaStore;
+//import android.os.Bundle;
+//import android.os.CountDownTimer;
+//import android.os.Environment;
+//import android.provider.MediaStore;
 import android.util.AttributeSet;
-import android.util.Log;
+//import android.util.Log;
 import android.view.View;
 import android.view.MotionEvent;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 public class DrawingView extends View {
 
