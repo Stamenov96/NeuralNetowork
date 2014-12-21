@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 2 elements from project &apos;NeuralNet&apos;&#x0A;- Original project: &apos;NeuralNet&apos;&#x0A;- Original elements:&#x0A;     NeuralNet/src/com.exampl&#x0A;     NeuralNet/src/com.example" description="Delete elements" element1="/src&lt;com.example" element2="/src&lt;com" element3="/src&lt;com.exampl" element4="/src&lt;com" elements="4" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1419168767072" subPackages="false" version="1.0"/>
+</session>

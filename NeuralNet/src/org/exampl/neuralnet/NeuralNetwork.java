@@ -1,6 +1,7 @@
 package org.exampl.neuralnet;
 
-import org.exampl.neuralnet.Helpers;
+import java.math.BigDecimal;
+
 
 class NeuralNetwork {
 	private int numInput;
@@ -87,9 +88,10 @@ class NeuralNetwork {
 		for (int i = 0; i < numHidden; ++i)
 			ihSums[i] = 0.0;
 		
+		
 		for (int i = 0; i < numOutput; ++i)
 			hoSums[i] = 0.0;
-
+		
 		for (int i = 0; i < xValues.length; ++i)
 			// copy x-values to inputs
 			this.inputs[i] = xValues[i];
@@ -115,8 +117,8 @@ class NeuralNetwork {
 			// add biases to input-to-hidden sums
 			ihSums[i] += ihBiases[i];
 		
-		System.out.println("\ninput-to-hidden sums after adding i-h biases:");
-		Helpers.ShowVector(this.ihSums);
+		//System.out.println("\ninput-to-hidden sums after adding i-h biases:");
+		//Helpers.ShowVector(this.ihSums);
 
 		for (int i = 0; i < numHidden; ++i)
 			// determine input-to-hidden output
@@ -144,25 +146,20 @@ class NeuralNetwork {
 			// add biases to input-to-hidden sums
 			hoSums[i] += hoBiases[i];
 
-		System.out.println("hidden-to-output sums after adding h-o biases:");
-		Helpers.ShowVector(this.hoSums);
+		//System.out.println("hidden-to-output sums after adding h-o biases:");
+		//Helpers.ShowVector(this.hoSums);
 
 		for (int i = 0; i < numOutput; ++i)
 			// determine hidden-to-output result
-			this.outputs[i] = HyperTanFunction(hoSums[i]);
-
+			this.outputs[i] = SoftmaxFunction(hoSums[i],hoBiases);
 		double[] result = new double[numOutput];
 		result = this.outputs;
-		System.out.printf("NEW RESULTS: ",result);
+		//System.out.printf("NEW RESULTS: ",result);
+		System.out.println("Debug");
 		return result;
 	} // ComputeOutputs
 
-    @SuppressWarnings("unused")
-	private static double StepFunction(double x) // an activation function that isn't compatible with back-propagation bcause it isn't differentiable
-    {
-      if (x > 0.0) return 1.0;
-      else return 0.0;
-    }
+    
     public void UpdateWeights(double[] tValues, double eta, double alpha) throws Exception // update the weights and biases using back-propagation, with target values, eta (learning rate), alpha (momentum)
     {
       // assumes that SetWeights and ComputeOutputs have been called and so all the internal arrays and matrices have values (other than 0.0)
@@ -172,7 +169,7 @@ class NeuralNetwork {
       // 1. compute output gradients
       for (int i = 0; i < oGrads.length; ++i)
       {
-        double derivative = (1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
+        double derivative =(1 - ihOutputs[i]) * ihOutputs[i]; //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
         oGrads[i] = derivative * (tValues[i] - outputs[i]);
       }
 
@@ -245,22 +242,33 @@ class NeuralNetwork {
       return result;
     }
 
-	private double SigmoidFunction(double x) {
-		if (x < -45.0)
-			return 0.0;
-		else if (x > 45.0)
-			return 1.0;
-		else
-			return 1.0 / (1.0 + Math.exp(-x));
+	private  double SigmoidFunction(double x) {	
+		return (1.0 / (1.0 + Math.exp(-x)));//Math.exp(709);//(1.0 / (1.0 + Math.exp(-x)));
 	}
 
-	private double HyperTanFunction(double x) {
-		if (x < -10.0)
-			return -1.0;
-		else if (x > 10.0)
-			return 1.0;
-		else
-			return Math.tanh(x);
+	private double SoftmaxFunction(double x, double[] hoBiases2) {
+//		if (x < -10.0)
+//			return -1.0;
+//		else if (x > 10.0)
+//			return 1.0;
+//		else{
+			//return Math.tanh(x);
+			//double z = Math.exp(x)/()
+		
+		
+//		private static double HyperTanFunction(double x)
+//		{
+//		  if (x < -10.0) return -1.0;
+//		  else if (x > 10.0) return 1.0;
+//		  else return Math.Tanh(x);
+//		}
+			double sum=0;
+			for (int i = 0; i < hoBiases2.length; i++) {
+				sum=Math.exp(hoBiases2[i]);
+			}
+			
+			return (Math.exp(x)/sum);	
+		//}
 	}
 
 } // class NeuralNetwork
