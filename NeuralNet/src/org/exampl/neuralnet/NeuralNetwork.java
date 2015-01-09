@@ -1,32 +1,34 @@
 package org.exampl.neuralnet;
 
 import java.math.BigDecimal;
-
+import java.math.MathContext;
+import java.math.RoundingMode;
+import org.nevec.rjm.*;
 
 class NeuralNetwork {
 	private int numInput;
 	private int numHidden;
 	private int numOutput;
 
-	private double[] inputs;
-	private double[][] ihWeights; // input-to-hidden
-	private double[] ihSums;
-	private double[] ihBiases;
-	private double[] ihOutputs;
+	private BigDecimal[] inputs;
+	private BigDecimal[][] ihWeights; // input-to-hidden
+	private BigDecimal[] ihSums;
+	private BigDecimal[] ihBiases;
+	private BigDecimal[] ihOutputs;
 
-	private double[][] hoWeights; // hidden-to-output
-	private double[] hoSums;
-	private double[] hoBiases;
-	private double[] outputs;
+	private BigDecimal[][] hoWeights; // hidden-to-output
+	private BigDecimal[] hoSums;
+	private BigDecimal[] hoBiases;
+	private BigDecimal[] outputs;
 
-	private double[] oGrads; // output gradients for back-propagation
-	private double[] hGrads; // hidden gradients for back-propagation
+	private BigDecimal[] oGrads; // output gradients for back-propagation
+	private BigDecimal[] hGrads; // hidden gradients for back-propagation
 
-	private double[][] ihPrevWeightsDelta; // for momentum with back-propagation
-	private double[] ihPrevBiasesDelta;
+	private BigDecimal[][] ihPrevWeightsDelta; // for momentum with back-propagation
+	private BigDecimal[] ihPrevBiasesDelta;
 
-	private double[][] hoPrevWeightsDelta;
-	private double[] hoPrevBiasesDelta;
+	private BigDecimal[][] hoPrevWeightsDelta;
+	private BigDecimal[] hoPrevBiasesDelta;
 
 	public NeuralNetwork(int numInput, int numHidden, int numOutput)
     {
@@ -34,27 +36,33 @@ class NeuralNetwork {
       this.numHidden = numHidden;
       this.numOutput = numOutput;
 
-      inputs = new double[numInput];
+      inputs = new BigDecimal[numInput];
       ihWeights = Helpers.MakeMatrix(numInput, numHidden);
-      ihSums = new double[numHidden];
-      ihBiases = new double[numHidden];
-      ihOutputs = new double[numHidden];
+      ihSums = new BigDecimal[numHidden];
+      ihBiases = new BigDecimal[numHidden];
+      ihOutputs = new BigDecimal[numHidden];
       hoWeights = Helpers.MakeMatrix(numHidden, numOutput);
-      hoSums = new double[numOutput];
-      hoBiases = new double[numOutput];
-      outputs = new double[numOutput];
+      hoSums = new BigDecimal[numOutput];
+      hoBiases = new BigDecimal[numOutput];
+      outputs = new BigDecimal[numOutput];
 
-      oGrads = new double[numOutput];
-      hGrads = new double[numHidden];
+      oGrads = new BigDecimal[numOutput];
+      hGrads = new BigDecimal[numHidden];
 
       ihPrevWeightsDelta = Helpers.MakeMatrix(numInput, numHidden);
-      ihPrevBiasesDelta = new double[numHidden];
+      ihPrevBiasesDelta = new BigDecimal[numHidden];
+      for (int i = 0; i < ihPrevBiasesDelta.length; i++) {
+		ihPrevBiasesDelta[i]=new BigDecimal(0.0);
+	}
       hoPrevWeightsDelta = Helpers.MakeMatrix(numHidden, numOutput);
-      hoPrevBiasesDelta = new double[numOutput];
+      hoPrevBiasesDelta = new BigDecimal[numOutput];
+      for (int i = 0; i < hoPrevBiasesDelta.length; i++) {
+		hoPrevBiasesDelta[i]=new BigDecimal(0.0);
+	}
     }
 
 
-	public void SetWeights(double[] weights) throws Exception
+	public void SetWeights(BigDecimal[] weights) throws Exception
     {
       // copy weights and biases in weights[] array to i-h weights, i-h biases, h-o weights, h-o biases
       int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
@@ -80,17 +88,17 @@ class NeuralNetwork {
 
 	
 
-	public double[] ComputeOutputs(double[] xValues) throws Exception {
+	public BigDecimal[] ComputeOutputs(BigDecimal[] xValues) throws Exception {
 		if (xValues.length != numInput)
 			throw new Exception("Inputs array length " + inputs.length
 					+ " does not match NN numInput value " + numInput);
 
 		for (int i = 0; i < numHidden; ++i)
-			ihSums[i] = 0.0;
+			ihSums[i] = new BigDecimal(0.0);
 		
 		
 		for (int i = 0; i < numOutput; ++i)
-			hoSums[i] = 0.0;
+			hoSums[i] = new BigDecimal(0.0);
 		
 		for (int i = 0; i < xValues.length; ++i)
 			// copy x-values to inputs
@@ -99,23 +107,27 @@ class NeuralNetwork {
 		// System.out.println("Inputs:");
 		// Helpers.ShowVector(this.inputs);
 
-		// System.out.println("input-to-hidden weights:");
-		// Helpers.ShowMatrix(this.ihWeights, -1);
+//		 System.out.println("input-to-hidden weights:");
+//		 Helpers.ShowMatrix(this.ihWeights, -1);
 
-		for (int j = 0; j < numHidden; ++j)
+		for (int j = 0; j < numHidden; ++j){
 			// compute input-to-hidden weighted sums
-			for (int i = 0; i < numInput; ++i)
-				ihSums[j] += this.inputs[i] * ihWeights[i][j];
-
-		// System.out.println("input-to-hidden sums:");
-		// Helpers.ShowVector(this.ihSums);
+			for (int i = 0; i < numInput; ++i){
+				ihSums[j] =ihSums[j].add(this.inputs[i].multiply(ihWeights[i][j]));
+				//System.out.println(ihSums[j]+" += "+ inputs[i] + "*" +ihWeights[i][j]);
+			}
+	}
+		
+		
+		//System.out.println("input-to-hidden sums:");
+		//Helpers.ShowVector(this.ihSums);
 
 		// System.out.println("input-to-hidden biases:");
 		// Helpers.ShowVector(ihBiases);
 		
 		for (int i = 0; i < numHidden; ++i)
 			// add biases to input-to-hidden sums
-			ihSums[i] += ihBiases[i];
+			ihSums[i] =ihSums[i].add(ihBiases[i]);
 		
 		//System.out.println("\ninput-to-hidden sums after adding i-h biases:");
 		//Helpers.ShowVector(this.ihSums);
@@ -134,7 +146,7 @@ class NeuralNetwork {
 		for (int j = 0; j < numOutput; ++j)
 			// compute hidden-to-output weighted sums
 			for (int i = 0; i < numHidden; ++i)
-				hoSums[j] += ihOutputs[i] * hoWeights[i][j];
+				hoSums[j] =hoSums[j].add( ihOutputs[i].multiply(hoWeights[i][j]));
 
 		// System.out.println("hidden-to-output sums:");
 		// Helpers.ShowVector(hoSums);
@@ -144,23 +156,23 @@ class NeuralNetwork {
 
 		for (int i = 0; i < numOutput; ++i)
 			// add biases to input-to-hidden sums
-			hoSums[i] += hoBiases[i];
+			hoSums[i] =hoSums[i].add( hoBiases[i]);
 
 		//System.out.println("hidden-to-output sums after adding h-o biases:");
 		//Helpers.ShowVector(this.hoSums);
 
 		for (int i = 0; i < numOutput; ++i)
 			// determine hidden-to-output result
-			this.outputs[i] = SoftmaxFunction(hoSums[i],hoBiases);
-		double[] result = new double[numOutput];
+			this.outputs[i] = SoftmaxFunction(hoSums[i],hoSums);
+		BigDecimal[] result = new BigDecimal[numOutput];
 		result = this.outputs;
 		//System.out.printf("NEW RESULTS: ",result);
-		System.out.println("Debug");
+		//System.out.println("Debug");
 		return result;
 	} // ComputeOutputs
 
     
-    public void UpdateWeights(double[] tValues, double eta, double alpha) throws Exception // update the weights and biases using back-propagation, with target values, eta (learning rate), alpha (momentum)
+    public void UpdateWeights(BigDecimal[] tValues, BigDecimal eta, BigDecimal alpha) throws Exception // update the weights and biases using back-propagation, with target values, eta (learning rate), alpha (momentum)
     {
       // assumes that SetWeights and ComputeOutputs have been called and so all the internal arrays and matrices have values (other than 0.0)
       if (tValues.length != numOutput)
@@ -169,18 +181,18 @@ class NeuralNetwork {
       // 1. compute output gradients
       for (int i = 0; i < oGrads.length; ++i)
       {
-        double derivative =(1 - ihOutputs[i]) * ihOutputs[i]; //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
-        oGrads[i] = derivative * (tValues[i] - outputs[i]);
+        BigDecimal derivative =(new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
+        oGrads[i] = derivative.multiply((tValues[i].subtract(outputs[i])));
       }
 
       // 2. compute hidden gradients
       for (int i = 0; i < hGrads.length; ++i)
       {
-        double derivative = (1 - ihOutputs[i]) * ihOutputs[i]; // (1 / 1 + exp(-x))'  -- using output value of neuron
-        double sum = 0.0;
+        BigDecimal derivative = (new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); // (1 / 1 + exp(-x))'  -- using output value of neuron
+        BigDecimal sum = new BigDecimal(0.0);
         for (int j = 0; j < numOutput; ++j) // each hidden delta is the sum of numOutput terms
-          sum += oGrads[j] * hoWeights[i][j]; // each downstream gradient * outgoing weight
-        hGrads[i] = derivative * sum;
+          sum =sum.add( oGrads[j].multiply(hoWeights[i][j])); // each downstream gradient * outgoing weight
+        hGrads[i] = derivative.multiply(sum);
       }
 
       // 3. update input to hidden weights (gradients must be computed right-to-left but weights can be updated in any order
@@ -188,18 +200,18 @@ class NeuralNetwork {
       {
         for (int j = 0; j < ihWeights[0].length; ++j) // 0..3 (4)
         {
-          double delta = eta * hGrads[j] * inputs[i]; // compute the new delta
-          ihWeights[i][j] += delta; // update
-          ihWeights[i][j] += alpha * ihPrevWeightsDelta[i][j]; // add momentum using previous delta. on first pass old value will be 0.0 but that's OK.
+          BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta
+          ihWeights[i][j] =ihWeights[i][j].add( delta); // update
+          ihWeights[i][j] =ihWeights[i][j].add( alpha.multiply(ihPrevWeightsDelta[i][j])); // add momentum using previous delta. on first pass old value will be 0.0 but that's OK.
         }
       }
 
       // 3b. update input to hidden biases
       for (int i = 0; i < ihBiases.length; ++i)
       {
-        double delta = eta * hGrads[i] * 1.0; // the 1.0 is the constant input for any bias; could leave out
-        ihBiases[i] += delta;
-        ihBiases[i] += alpha * ihPrevBiasesDelta[i];
+        BigDecimal delta = eta.multiply(hGrads[i]).multiply(new BigDecimal(1.0)); // the 1.0 is the constant input for any bias; could leave out
+        ihBiases[i] = ihBiases[i].subtract(delta);
+        ihBiases[i] = ihBiases[i].add( alpha.multiply(ihPrevBiasesDelta[i]));
       }
 
       // 4. update hidden to output weights
@@ -207,9 +219,9 @@ class NeuralNetwork {
       {
         for (int j = 0; j < hoWeights[0].length; ++j) // 0..1 (2)
         {
-          double delta = eta * oGrads[j] * ihOutputs[i];  // see above: ihOutputs are inputs to next layer
-          hoWeights[i][j] += delta;
-          hoWeights[i][j] += alpha * hoPrevWeightsDelta[i][j];
+          BigDecimal delta = eta.multiply(oGrads[j]).multiply(ihOutputs[i]);  // see above: ihOutputs are inputs to next layer
+          hoWeights[i][j] = hoWeights[i][j].add(delta);
+          hoWeights[i][j] = hoWeights[i][j].add( alpha.multiply(hoPrevWeightsDelta[i][j]));
           hoPrevWeightsDelta[i][j] = delta;
         }
       }
@@ -217,17 +229,17 @@ class NeuralNetwork {
       // 4b. update hidden to output biases
       for (int i = 0; i < hoBiases.length; ++i)
       {
-        double delta = eta * oGrads[i] * 1.0;
-        hoBiases[i] += delta;
-        hoBiases[i] += alpha * hoPrevBiasesDelta[i];
+        BigDecimal delta = eta.multiply(oGrads[i]).multiply(new BigDecimal(1.0));
+        hoBiases[i] = hoBiases[i].add(delta);
+        hoBiases[i] = hoBiases[i].add(alpha.multiply(hoPrevBiasesDelta[i]));
         hoPrevBiasesDelta[i] = delta;
       }
     }
 
-    public double[] GetWeights()
+    public BigDecimal[] GetWeights()
     {
       int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
-      double[] result = new double[numWeights];
+      BigDecimal[] result = new BigDecimal[numWeights];
       int k = 0;
       for (int i = 0; i < ihWeights.length; ++i)
         for (int j = 0; j < ihWeights[0].length; ++j)
@@ -242,11 +254,32 @@ class NeuralNetwork {
       return result;
     }
 
-	private  double SigmoidFunction(double x) {	
-		return (1.0 / (1.0 + Math.exp(-x)));//Math.exp(709);//(1.0 / (1.0 + Math.exp(-x)));
+	private  BigDecimal SigmoidFunction(BigDecimal ihSums2) {	
+//		 if (x < -45.0) return 0.0;
+//		  else if (x > 45.0) return 1.0;
+//		  else {
+		BigDecimal b = BigDecimalMath.pow(new BigDecimal(Math.E), (new BigDecimal(-1).multiply(ihSums2))) ;
+		b=b.add(new BigDecimal(1));
+		b=new BigDecimal(1).divide(b,MathContext.DECIMAL128);
+		//double constant = (double)1; 
+//		BigDecimal test = new BigDecimal(b);
+//		BigDecimal test2 = new BigDecimal(constant);
+//		BigDecimal test3= test.add(test2);
+//		//String w = test3.toString();
+		//Double value=Double.valueOf(w);
+		//double g = Double.parseDouble(w);
+		//BigDecimal bd = new BigDecimal(Double.toString(b));
+		//test3 = test3.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		//double g = test3..doubleValue();
+		//BigDecimal bd = new BigDecimal(test3).setScale(2, RoundingMode.HALF_EVEN);
+		//test3.setScale(w.length(), RoundingMode.HALF_EVEN);
+		//double test4 = test3.doubleValue();
+
+		//double a  =(1.0 / (1.0 + Math.exp(-1*ihSums2)));//(1.0 / (1.0 + Math.exp(-x)));
+		 return b;
 	}
 
-	private double SoftmaxFunction(double x, double[] hoBiases2) {
+	private BigDecimal SoftmaxFunction(BigDecimal hoSums2, BigDecimal[] hoSums3) {
 //		if (x < -10.0)
 //			return -1.0;
 //		else if (x > 10.0)
@@ -262,12 +295,12 @@ class NeuralNetwork {
 //		  else if (x > 10.0) return 1.0;
 //		  else return Math.Tanh(x);
 //		}
-			double sum=0;
-			for (int i = 0; i < hoBiases2.length; i++) {
-				sum=Math.exp(hoBiases2[i]);
+			BigDecimal sum= new BigDecimal(0);
+			for (int i = 0; i < hoSums3.length; i++) {
+				sum=BigDecimalMath.pow(new BigDecimal(Math.E),hoSums3[i]);
 			}
-			
-			return (Math.exp(x)/sum);	
+			BigDecimal a  =(BigDecimalMath.pow(new BigDecimal(Math.E), (hoSums2))).divide(sum,MathContext.DECIMAL128);
+			return a;	
 		//}
 	}
 

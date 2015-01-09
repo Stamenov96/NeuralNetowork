@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -88,7 +89,7 @@ public class NeuralNetworksProgram {
 				//System.out
 					//	.println("Using tanh function for hidden-to-output activation");
 				int numofinput =numCols*numRows;
-				int numofhidden=1200;
+				int numofhidden=1000;
 				int numofoutput=10;
 				NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden, numofoutput);
 
@@ -105,7 +106,7 @@ public class NeuralNetworksProgram {
 				OutputStream fOut;
 				File file = new File(path, "statsText.txt"); // the File to save to
 				
-				if (!file.exists()&& !file.isFile()) {
+			//	if (!file.exists()&& !file.isFile()) {
 				
 				
 				try {
@@ -130,7 +131,7 @@ public class NeuralNetworksProgram {
 				}
 				
 				
-				}else{System.out.println("FILE EXISTS");}
+			//	}else{System.out.println("FILE EXISTS");}
 				
 				
 				/*File statText = new File("/home/stefo/Desktop/statsTest.txt");
@@ -156,10 +157,11 @@ public class NeuralNetworksProgram {
 
 				Scanner newscan = new Scanner(file);
 				//System.out.println(">>>>>>" + count);
-				double[] weights = new double[count];
+				BigDecimal[] weights = new BigDecimal[count];
 				for (int i = 0; i < count; i++) {
 					String line = newscan.nextLine();
-					weights[i] = Double.parseDouble(line);
+					double a = Double.parseDouble(line);
+					weights[i] = new BigDecimal(a);
 				}
 				
 //				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>");
@@ -174,19 +176,22 @@ public class NeuralNetworksProgram {
 
 				//System.out.println("\nSetting inputs:");
 				
-				double[] xValues = MNISTReader.main(args);
+				BigDecimal[] xValues = MNISTReader.main(args);
 				//System.out.println("XVALSSSSSSSSSSSSSSSSSSSSSSS");
-				Helpers.ShowVector(xValues);
+				//Helpers.ShowVector(xValues);
 
 				//System.out.println("Loading inputs and computing outputs");
-				double[] initialOutputs = nn.ComputeOutputs(xValues);
+				BigDecimal[] initialOutputs = nn.ComputeOutputs(xValues);
 
 				//System.out.println("\nNeural network outputs are:");
 				//Helpers.ShowVector(initialOutputs);
 
-				double[] tValues = new double[10];
+				BigDecimal[] tValues = new BigDecimal[10];
 				//Arrays.fill(tValues,(Double) null);
-				tValues[label-1]=1;
+				for (int i = 0; i < tValues.length; i++) {
+					tValues[i]=new BigDecimal(0.0);
+				}
+				tValues[label-1]= new BigDecimal(1);
 				
 				
 				
@@ -205,10 +210,10 @@ public class NeuralNetworksProgram {
 				//System.out.println("Target outputs to learn are:");
 				//Helpers.ShowVector(tValues);
 
-				double eta = 0.25; // learning rate - controls the maginitude of
+				BigDecimal eta = new BigDecimal(0.25); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				double alpha = 0.04; // momentum - to discourage oscillation.
+				BigDecimal alpha =new BigDecimal(0.04); // momentum - to discourage oscillation.
 										// found by trial and error.
 				//System.out.println("Setting learning rate (eta) = " + eta
 					//	+ " and momentum (alpha) = " + alpha);
@@ -218,7 +223,7 @@ public class NeuralNetworksProgram {
 //				System.out
 //						.println("Stopping when sum absolute error <= 0.01 or 1,000 iterations\n");
 				int ctr = 0;
-				double[] yValues = nn.ComputeOutputs(xValues); // prime the
+				BigDecimal[] yValues = nn.ComputeOutputs(xValues); // prime the
 																// back-propagation
 																// loop
 				
@@ -226,18 +231,19 @@ public class NeuralNetworksProgram {
 				//yValues = nn.ComputeOutputs(xValues);
 				Helpers.ShowVector(yValues);
 				
-				double error = Error(tValues, yValues);
-				System.out.println("ERRRORRR"+error);
+				BigDecimal error = Error(tValues, yValues);
+				System.out.println("ERRRORRR   "+error);
 				
 			//	while (ctr < 1000 && error > 0.01) {
 				for (int i = 0; i < 2;i++) {
-
+					
 				System.out
 						.println("===================================================");
 				System.out.println("iteration = " + ctr);
 				System.out
 						.println("Updating weights and biases using back-propagation");
 				nn.UpdateWeights(tValues, eta, alpha);
+				//Helpers.ShowVector(weights);
 				System.out.println("Computing new outputs:");
 				yValues = nn.ComputeOutputs(xValues);
 				//Helpers.ShowVector(yValues);
@@ -255,13 +261,13 @@ public class NeuralNetworksProgram {
 						.println("===================================================");
 				System.out.println("Error = " + error);
 				System.out.println("\nBest weights and biases found:");
-				double[] bestWeights = nn.GetWeights();
+				BigDecimal[] bestWeights = nn.GetWeights();
 				
 				
 				try {
 					FileWriter out = new FileWriter(file);
 					for (int i = 0; i < bestWeights.length; i++) {
-						out.write(Double.toString(bestWeights[i]) + "\n");
+						out.write((bestWeights[i].toPlainString()) + "\n");
 					}
 				out.flush();
 					out.close();
@@ -283,7 +289,7 @@ public class NeuralNetworksProgram {
 		}
 	} // Main
 
-	static double Error(double[] target, double[] output) // sum absolute error.
+	static BigDecimal Error(BigDecimal[] tValues, BigDecimal[] yValues) // sum absolute error.
 															// could put into
 															// NeuralNetwork
 															// class.
@@ -292,9 +298,9 @@ public class NeuralNetworksProgram {
 	{
 		//System.out.println("TARGETS");
 		//Helpers.ShowVector(target);
-		double sum = 0.0;
-		for (int i = 0; i < target.length; ++i)
-			sum += Math.abs(target[i] - output[i]);
+		BigDecimal sum = new BigDecimal(0.0);
+		for (int i = 0; i < tValues.length; ++i)
+			sum =sum.add((tValues[i].subtract( yValues[i])).abs());
 		return sum;
 	}
 } // class NeuralNetworksProgram

@@ -1,23 +1,31 @@
 package org.exampl.neuralnet;
 
+import java.math.BigDecimal;
+
 public class Helpers
 {
-  public static double[][] MakeMatrix(int rows, int cols)
+  public static BigDecimal[][] MakeMatrix(int rows, int cols)
   {
-    double[][] result = new double[rows][];
+    BigDecimal[][] result = new BigDecimal[rows][];
     for (int i = 0; i < rows; ++i)
-      result[i] = new double[cols];
+      result[i] = new BigDecimal[cols];
+    
+    for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			result[i][j] = new BigDecimal(0);
+		}
+	}
     return result;
   }
 
-  public static void ShowVector(double[] vector)
+  public static void ShowVector(BigDecimal[] yValues)
   {
-    for (int i = 0; i < vector.length; ++i)
+    for (int i = 0; i < yValues.length; ++i)
     {
       if (i > 0 && i % 12 == 0) // max of 12 values per row 
         System.out.println("");
-          if (vector[i] >= 0.0) System.out.println(" ");
-      System.out.println(vector[i]); // 2 decimals
+          if (yValues[i].compareTo(new BigDecimal(0.0)) >= 0)System.out.println(" ");
+      System.out.println(yValues[i]); // 2 decimals
     }
     System.out.println("\n");
   }
