@@ -29,7 +29,6 @@
 <fullyQualifiedTypeName name="java.lang.Override"/>
 <fullyQualifiedTypeName name="android.content.ContentResolver"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
-<fullyQualifiedTypeName name="org.exampl.neuralnet.Helpers"/>
 <fullyQualifiedTypeName name="android.app.DialogFragment"/>
 <fullyQualifiedTypeName name="android.app.Dialog"/>
 <fullyQualifiedTypeName name="android.os.Bundle"/>
@@ -38,4 +37,12 @@
 <fullyQualifiedTypeName name="com.example.drawing.MainActivity"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="org.exampl.neuralnet.Helpers"/>
+<fullyQualifiedTypeName name="java.lang.Double"/>
+<fullyQualifiedTypeName name="java.math.RoundingMode"/>
+<fullyQualifiedTypeName name="javax.swing.event.AncestorEvent"/>
+<fullyQualifiedTypeName name="java.math.MathContext"/>
+<fullyQualifiedTypeName name="org.nevec.rjm.BigDecimalMath"/>
+<fullyQualifiedTypeName name="java.lang.Math"/>
+<fullyQualifiedTypeName name="java.math.BigDecimal"/>
 </qualifiedTypeNameHistroy>

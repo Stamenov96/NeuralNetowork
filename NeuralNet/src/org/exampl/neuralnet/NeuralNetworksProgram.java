@@ -213,7 +213,7 @@ public class NeuralNetworksProgram {
 				BigDecimal eta = new BigDecimal(0.25); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				BigDecimal alpha =new BigDecimal(0.04); // momentum - to discourage oscillation.
+				BigDecimal alpha =new BigDecimal(40); // momentum - to discourage oscillation.
 										// found by trial and error.
 				//System.out.println("Setting learning rate (eta) = " + eta
 					//	+ " and momentum (alpha) = " + alpha);
@@ -234,7 +234,7 @@ public class NeuralNetworksProgram {
 				BigDecimal error = Error(tValues, yValues);
 				System.out.println("ERRRORRR   "+error);
 				
-			//	while (ctr < 1000 && error > 0.01) {
+				while (ctr < 1000 && (error.compareTo(new BigDecimal(0.01)) > 0)) {
 				for (int i = 0; i < 2;i++) {
 					
 				System.out
@@ -253,14 +253,18 @@ public class NeuralNetworksProgram {
 				++ctr;
 				System.out.println("OUTPUTS:");
 				//yValues = nn.ComputeOutputs(xValues);
-				Helpers.ShowVector(yValues);
+				//Helpers.ShowVector(yValues);
 				
 			}
-			//}
+			}
 				System.out
 						.println("===================================================");
 				System.out.println("Error = " + error);
 				System.out.println("\nBest weights and biases found:");
+				System.out.println("otuputs : ");
+				Helpers.ShowVector(yValues);
+				System.out.println("===================================================");
+				
 				BigDecimal[] bestWeights = nn.GetWeights();
 				
 				

@@ -159,13 +159,23 @@ class NeuralNetwork {
 			hoSums[i] =hoSums[i].add( hoBiases[i]);
 
 		//System.out.println("hidden-to-output sums after adding h-o biases:");
-		//Helpers.ShowVector(this.hoSums);
+		//Helpers.ShowVector(hoSums);
 
+		
+//		for (int i = 0; i < numOutput; ++i)   // determine hidden-to-output result
+//			+      this.outputs[i] = HyperTanFunction(hoSums[i]);
+//			+
+//			+    double[] result = new double[numOutput];
+//			+    result = this.outputs;
+//			+    
+//			+    return result;
+//		
+		
 		for (int i = 0; i < numOutput; ++i)
 			// determine hidden-to-output result
-			this.outputs[i] = SoftmaxFunction(hoSums[i],hoSums);
+			outputs[i] = SoftmaxFunction(hoSums[i],hoSums);
 		BigDecimal[] result = new BigDecimal[numOutput];
-		result = this.outputs;
+		result = outputs;	
 		//System.out.printf("NEW RESULTS: ",result);
 		//System.out.println("Debug");
 		return result;
@@ -258,7 +268,8 @@ class NeuralNetwork {
 //		 if (x < -45.0) return 0.0;
 //		  else if (x > 45.0) return 1.0;
 //		  else {
-		BigDecimal b = BigDecimalMath.pow(new BigDecimal(Math.E), (new BigDecimal(-1).multiply(ihSums2))) ;
+		//setScale(1000, BigDecimal.ROUND_FLOOR);
+		BigDecimal b = BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (new BigDecimal(-1).multiply(ihSums2).setScale(100,BigDecimal.ROUND_FLOOR))) ;
 		b=b.add(new BigDecimal(1));
 		b=new BigDecimal(1).divide(b,MathContext.DECIMAL128);
 		//double constant = (double)1; 
@@ -280,26 +291,18 @@ class NeuralNetwork {
 	}
 
 	private BigDecimal SoftmaxFunction(BigDecimal hoSums2, BigDecimal[] hoSums3) {
-//		if (x < -10.0)
-//			return -1.0;
-//		else if (x > 10.0)
-//			return 1.0;
-//		else{
-			//return Math.tanh(x);
-			//double z = Math.exp(x)/()
-		
-		
-//		private static double HyperTanFunction(double x)
-//		{
-//		  if (x < -10.0) return -1.0;
-//		  else if (x > 10.0) return 1.0;
-//		  else return Math.Tanh(x);
-//		}
+
 			BigDecimal sum= new BigDecimal(0);
 			for (int i = 0; i < hoSums3.length; i++) {
-				sum=BigDecimalMath.pow(new BigDecimal(Math.E),hoSums3[i]);
+				sum=sum.add(BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR),hoSums3[i].setScale(100, BigDecimal.ROUND_FLOOR)));
 			}
-			BigDecimal a  =(BigDecimalMath.pow(new BigDecimal(Math.E), (hoSums2))).divide(sum,MathContext.DECIMAL128);
+			//System.out.println("===========sum==================");
+			//System.out.println(sum);
+			BigDecimal b =BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (hoSums2.setScale(100, BigDecimal.ROUND_FLOOR)));
+			//System.out.println("==========b==================");
+			
+			//System.out.println(b);
+			BigDecimal a  =b.divide(sum,MathContext.DECIMAL128);
 			return a;	
 		//}
 	}

@@ -249,8 +249,11 @@ class NeuralNetwork {
 			return 0.0;
 		else if (x > 45.0)
 			return 1.0;
-		else
-			return 1.0 / (1.0 + Math.exp(-x));
+		else{
+			double a=Math.exp(-1*53.15);
+			double b = (double)a+(double)1;
+			return 1.0 / (1.0 + Math.exp(-1*x));
+			}
 	}
 
 	private double SoftmaxFunction(double x, double[] hoBiases2) {
