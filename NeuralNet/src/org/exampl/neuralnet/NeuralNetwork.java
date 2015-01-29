@@ -269,9 +269,20 @@ class NeuralNetwork {
 //		  else if (x > 45.0) return 1.0;
 //		  else {
 		//setScale(1000, BigDecimal.ROUND_FLOOR);
-		BigDecimal b = BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (new BigDecimal(-1).multiply(ihSums2).setScale(100,BigDecimal.ROUND_FLOOR))) ;
+		//BigDecimal b = BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (new BigDecimal(-1).multiply(ihSums2).setScale(100,BigDecimal.ROUND_FLOOR))) ;
+		
+		double bb = Math.pow(Math.E,((-1)*(ihSums2.doubleValue())));
+		BigDecimal b = new BigDecimal(bb);
 		b=b.add(new BigDecimal(1));
+		
+//		System.out.println("double");
+//		System.out.println(bbb);
+//		System.out.println("GOSHO:  ");
+//		System.out.println(b);
+//		
 		b=new BigDecimal(1).divide(b,MathContext.DECIMAL128);
+
+		
 		//double constant = (double)1; 
 //		BigDecimal test = new BigDecimal(b);
 //		BigDecimal test2 = new BigDecimal(constant);
@@ -292,17 +303,40 @@ class NeuralNetwork {
 
 	private BigDecimal SoftmaxFunction(BigDecimal hoSums2, BigDecimal[] hoSums3) {
 
-			BigDecimal sum= new BigDecimal(0);
-			for (int i = 0; i < hoSums3.length; i++) {
-				sum=sum.add(BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR),hoSums3[i].setScale(100, BigDecimal.ROUND_FLOOR)));
+			//BigDecimal sum= new BigDecimal(0);
+			//for (int i = 0; i < hoSums3.length; i++) {
+			//	sum=sum.add(BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR),hoSums3[i].setScale(100, BigDecimal.ROUND_FLOOR)));
+			//}
+			double sum2 =0.0;
+			for(int i =0; i<hoSums3.length;i++){
+				sum2 = sum2 + (Math.pow(Math.E, hoSums3[i].doubleValue()));
 			}
+			/// sys sum stava
+			
+
+			
 			//System.out.println("===========sum==================");
 			//System.out.println(sum);
-			BigDecimal b =BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (hoSums2.setScale(100, BigDecimal.ROUND_FLOOR)));
+			//BigDecimal b =BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (hoSums2.setScale(100, BigDecimal.ROUND_FLOOR)));
 			//System.out.println("==========b==================");
+			double bb=Math.pow(Math.E, hoSums2.doubleValue());
+			
+			BigDecimal sum = new BigDecimal(sum2);
+			BigDecimal b = new BigDecimal(bb);
+			
+			// i za B vaji 
 			
 			//System.out.println(b);
 			BigDecimal a  =b.divide(sum,MathContext.DECIMAL128);
+			
+//			double bbb=bb/(sum2);
+//			System.out.println("double");
+//			System.out.println(bbb);
+//			//double gosho = sum.doubleValue();
+//			System.out.println("GOSHO:  ");
+//			System.out.println(a);
+//			
+			
 			return a;	
 		//}
 	}

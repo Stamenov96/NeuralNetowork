@@ -213,7 +213,7 @@ public class NeuralNetworksProgram {
 				BigDecimal eta = new BigDecimal(0.25); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				BigDecimal alpha =new BigDecimal(40); // momentum - to discourage oscillation.
+				BigDecimal alpha =new BigDecimal(0.04); // momentum - to discourage oscillation.
 										// found by trial and error.
 				//System.out.println("Setting learning rate (eta) = " + eta
 					//	+ " and momentum (alpha) = " + alpha);
