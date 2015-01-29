@@ -181,6 +181,99 @@ class NeuralNetwork {
 		return result;
 	} // ComputeOutputs
 
+	public void step1(BigDecimal[] tValues){
+	      double[] oGrads2 = new double[oGrads.length];
+	      // 1. compute output gradients
+	      for (int i = 0; i < oGrads.length; ++i)
+	      {
+	        BigDecimal derivative =(new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
+	        oGrads[i] = derivative.multiply((tValues[i].subtract(outputs[i])));
+	        
+	        //double derivative2 = ((1-ihOutputs[i].doubleValue())*ihOutputs[i].doubleValue());
+	        oGrads2[i]=derivative.doubleValue()*(tValues[i].doubleValue()-(outputs[i].doubleValue()));
+	        
+	      //  System.out.println("BIG DEC");
+	       // System.out.println(oGrads[i]);
+	        //System.out.println("Double");
+	        //System.out.println(oGrads2[i]);
+	        
+	      }
+	}
+	
+	public void step2(){
+	      double[] hGrads2 = new double[hGrads.length];
+	      for (int i = 0; i < hGrads.length; ++i)
+	      {
+	        BigDecimal derivative = (new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); // (1 / 1 + exp(-x))'  -- using output value of neuron
+	        BigDecimal sum = new BigDecimal(0.0);
+	        double sum2=0.0;
+	        for (int j = 0; j < numOutput; ++j){ // each hidden delta is the sum of numOutput terms
+	          sum =sum.add( oGrads[j].multiply(hoWeights[i][j])); // each downstream gradient * outgoing weight
+	          sum2=sum2+(oGrads[j].doubleValue()*(hoWeights[i][j].doubleValue()));
+	          
+//	        System.out.println("BIG DEC");
+//	        System.out.println(sum);
+//	        System.out.println("Double");
+//	        System.out.println(sum2);
+//	         
+	          
+	        }
+	        hGrads[i] = derivative.multiply(sum);
+	        hGrads2[i] = derivative.doubleValue()*sum2;
+//	      System.out.println("BIG DEC");
+//	      System.out.println(hGrads2[i]);
+//	      System.out.println("Double");
+//	      System.out.println(hGrads2[i]);
+
+	      }
+	}
+	
+	void step3(BigDecimal eta, BigDecimal alpha){
+		 //double delta2=0;
+		 for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
+	      {
+	        for (int j = 0; j < ihWeights[0].length; ++j) // 0..3 (4)
+	        {
+	          BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta        
+	          //delta2 = eta.doubleValue()*(hGrads[j].doubleValue()*(inputs[]))
+	          ihWeights[i][j] =ihWeights[i][j].add( delta); // update
+	          ihWeights[i][j] =ihWeights[i][j].add( alpha.multiply(ihPrevWeightsDelta[i][j])); // add momentum using previous delta. on first pass old value will be 0.0 but that's OK. 
+	        }
+	      }
+
+	      // 3b. update input to hidden biases
+	      for (int i = 0; i < ihBiases.length; ++i)
+	      {
+	        BigDecimal delta = eta.multiply(hGrads[i]).multiply(new BigDecimal(1.0)); // the 1.0 is the constant input for any bias; could leave out
+	        ihBiases[i] = ihBiases[i].subtract(delta);
+	        ihBiases[i] = ihBiases[i].add( alpha.multiply(ihPrevBiasesDelta[i]));
+	      }
+	}
+	
+	public void step4(BigDecimal eta, BigDecimal alpha){
+		
+		
+		   for (int i = 0; i < hoWeights.length; ++i)  // 0..3 (4)
+		      {
+		        for (int j = 0; j < hoWeights[0].length; ++j) // 0..1 (2)
+		        {
+		          BigDecimal delta = eta.multiply(oGrads[j]).multiply(ihOutputs[i]);  // see above: ihOutputs are inputs to next layer
+		          hoWeights[i][j] = hoWeights[i][j].add(delta);
+		          hoWeights[i][j] = hoWeights[i][j].add( alpha.multiply(hoPrevWeightsDelta[i][j]));
+		          hoPrevWeightsDelta[i][j] = delta;
+		        }
+		      }
+
+		      // 4b. update hidden to output biases
+		      for (int i = 0; i < hoBiases.length; ++i)
+		      {
+		        BigDecimal delta = eta.multiply(oGrads[i]).multiply(new BigDecimal(1.0));
+		        hoBiases[i] = hoBiases[i].add(delta);
+		        hoBiases[i] = hoBiases[i].add(alpha.multiply(hoPrevBiasesDelta[i]));
+		        hoPrevBiasesDelta[i] = delta;
+		      }
+	}
+	
     
     public void UpdateWeights(BigDecimal[] tValues, BigDecimal eta, BigDecimal alpha) throws Exception // update the weights and biases using back-propagation, with target values, eta (learning rate), alpha (momentum)
     {
@@ -188,31 +281,62 @@ class NeuralNetwork {
       if (tValues.length != numOutput)
         throw new Exception("target values not same length as output in UpdateWeights");
 
+/*      double[] oGrads2 = new double[oGrads.length];
       // 1. compute output gradients
       for (int i = 0; i < oGrads.length; ++i)
       {
         BigDecimal derivative =(new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
         oGrads[i] = derivative.multiply((tValues[i].subtract(outputs[i])));
-      }
+        
+        //double derivative2 = ((1-ihOutputs[i].doubleValue())*ihOutputs[i].doubleValue());
+        oGrads2[i]=derivative.doubleValue()*(tValues[i].doubleValue()-(outputs[i].doubleValue()));
+        
+      //  System.out.println("BIG DEC");
+       // System.out.println(oGrads[i]);
+        //System.out.println("Double");
+        //System.out.println(oGrads2[i]);
+        
+      }*/
+      
+      step1(tValues);
 
       // 2. compute hidden gradients
+      
+/*      double[] hGrads2 = new double[hGrads.length];
       for (int i = 0; i < hGrads.length; ++i)
       {
         BigDecimal derivative = (new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); // (1 / 1 + exp(-x))'  -- using output value of neuron
         BigDecimal sum = new BigDecimal(0.0);
-        for (int j = 0; j < numOutput; ++j) // each hidden delta is the sum of numOutput terms
+        double sum2=0.0;
+        for (int j = 0; j < numOutput; ++j){ // each hidden delta is the sum of numOutput terms
           sum =sum.add( oGrads[j].multiply(hoWeights[i][j])); // each downstream gradient * outgoing weight
+          sum2=sum2+(oGrads[j].doubleValue()*(hoWeights[i][j].doubleValue()));
+          
+//        System.out.println("BIG DEC");
+//        System.out.println(sum);
+//        System.out.println("Double");
+//        System.out.println(sum2);
+//         
+          
+        }
         hGrads[i] = derivative.multiply(sum);
-      }
+        hGrads2[i] = derivative.doubleValue()*sum2;
+//      System.out.println("BIG DEC");
+//      System.out.println(hGrads2[i]);
+//      System.out.println("Double");
+//      System.out.println(hGrads2[i]);
+
+      }*/
+      step2();
 
       // 3. update input to hidden weights (gradients must be computed right-to-left but weights can be updated in any order
-      for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
+    /*  for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
       {
         for (int j = 0; j < ihWeights[0].length; ++j) // 0..3 (4)
         {
-          BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta
+          BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta        
           ihWeights[i][j] =ihWeights[i][j].add( delta); // update
-          ihWeights[i][j] =ihWeights[i][j].add( alpha.multiply(ihPrevWeightsDelta[i][j])); // add momentum using previous delta. on first pass old value will be 0.0 but that's OK.
+          ihWeights[i][j] =ihWeights[i][j].add( alpha.multiply(ihPrevWeightsDelta[i][j])); // add momentum using previous delta. on first pass old value will be 0.0 but that's OK. 
         }
       }
 
@@ -222,10 +346,12 @@ class NeuralNetwork {
         BigDecimal delta = eta.multiply(hGrads[i]).multiply(new BigDecimal(1.0)); // the 1.0 is the constant input for any bias; could leave out
         ihBiases[i] = ihBiases[i].subtract(delta);
         ihBiases[i] = ihBiases[i].add( alpha.multiply(ihPrevBiasesDelta[i]));
-      }
+      }*/
+      
+      step3(eta, alpha);
 
       // 4. update hidden to output weights
-      for (int i = 0; i < hoWeights.length; ++i)  // 0..3 (4)
+   /*   for (int i = 0; i < hoWeights.length; ++i)  // 0..3 (4)
       {
         for (int j = 0; j < hoWeights[0].length; ++j) // 0..1 (2)
         {
@@ -243,7 +369,9 @@ class NeuralNetwork {
         hoBiases[i] = hoBiases[i].add(delta);
         hoBiases[i] = hoBiases[i].add(alpha.multiply(hoPrevBiasesDelta[i]));
         hoPrevBiasesDelta[i] = delta;
-      }
+      }*/
+      
+      step4(eta, alpha);
     }
 
     public BigDecimal[] GetWeights()

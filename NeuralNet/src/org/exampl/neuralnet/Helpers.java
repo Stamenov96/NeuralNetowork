@@ -18,6 +18,21 @@ public class Helpers
     return result;
   }
 
+  
+  public static double[][] MakeDoubleMatrix(int rows, int cols)
+  {
+    double[][] result = new double[rows][];
+    for (int i = 0; i < rows; ++i)
+      result[i] = new double[cols];
+    
+    for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			result[i][j] = 0;
+		}
+	}
+    return result;
+  }
+  
   public static void ShowVector(BigDecimal[] yValues)
   {
     for (int i = 0; i < yValues.length; ++i)
