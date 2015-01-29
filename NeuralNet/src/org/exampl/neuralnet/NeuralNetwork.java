@@ -208,19 +208,19 @@ class NeuralNetwork {
 	        BigDecimal sum = new BigDecimal(0.0);
 	        double sum2=0.0;
 	        for (int j = 0; j < numOutput; ++j){ // each hidden delta is the sum of numOutput terms
-	          sum =sum.add( oGrads[j].multiply(hoWeights[i][j])); // each downstream gradient * outgoing weight
-	          sum2=sum2+(oGrads[j].doubleValue()*(hoWeights[i][j].doubleValue()));
-	          
+	          //sum =sum.add( oGrads[j].multiply(hoWeights[i][j])); // each downstream gradient * outgoing weight
+	          sum2=sum2+(oGrads[j].doubleValue()*(hoWeights[i][j].doubleValue())); 
+	        } 
 //	        System.out.println("BIG DEC");
 //	        System.out.println(sum);
 //	        System.out.println("Double");
 //	        System.out.println(sum2);
 //	         
-	          
-	        }
-	        hGrads[i] = derivative.multiply(sum);
+	         
+	        //hGrads[i] = derivative.multiply(sum);
 	        hGrads2[i] = derivative.doubleValue()*sum2;
-//	      System.out.println("BIG DEC");
+	        hGrads[i]= new BigDecimal(hGrads2[i]);
+//	        System.out.println("BIG DEC");
 //	      System.out.println(hGrads2[i]);
 //	      System.out.println("Double");
 //	      System.out.println(hGrads2[i]);
@@ -229,14 +229,14 @@ class NeuralNetwork {
 	}
 	
 	void step3(BigDecimal eta, BigDecimal alpha){
-		 //double delta2=0;
-		 for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
+		  
+		for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
 	      {
 	        for (int j = 0; j < ihWeights[0].length; ++j) // 0..3 (4)
 	        {
-	          BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta        
-	          //delta2 = eta.doubleValue()*(hGrads[j].doubleValue()*(inputs[]))
-	          ihWeights[i][j] =ihWeights[i][j].add( delta); // update
+	         // BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta        
+	          double delta2=eta.doubleValue()*inputs[i].doubleValue();
+	          ihWeights[i][j] =ihWeights[i][j].add( new BigDecimal(delta2)); // update
 	          ihWeights[i][j] =ihWeights[i][j].add( alpha.multiply(ihPrevWeightsDelta[i][j])); // add momentum using previous delta. on first pass old value will be 0.0 but that's OK. 
 	        }
 	      }
