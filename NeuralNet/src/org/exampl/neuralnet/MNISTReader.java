@@ -21,7 +21,7 @@ public class MNISTReader {
 	
 	
 	
-  public static BigDecimal[] main(String[] args) throws IOException {
+  public static double[] main(String[] args) throws IOException {
 	  
 	  
 	  String imagess = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/train-images.idx3-ubyte";
@@ -76,12 +76,12 @@ public class MNISTReader {
     for (int i = 0; i < img.length; i++) {
 		img[i]=img[i]/255;
 	}
-    BigDecimal[] img2 = new BigDecimal[img.length];
-    for (int i = 0; i < img.length; i++) {
-		img2[i]=new BigDecimal(img[i]);
-	}
+   // BigDecimal[] img2 = new BigDecimal[img.length];
+    //for (int i = 0; i < img.length; i++) {
+//		img2[i]=new BigDecimal(img[i]);
+	//}
     
-    return img2;
+    return img;
     
 
 //      if (numLabelsRead % 10 == 0) {
