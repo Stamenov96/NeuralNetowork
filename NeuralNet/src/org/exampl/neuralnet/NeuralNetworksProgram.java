@@ -230,7 +230,7 @@ public class NeuralNetworksProgram {
 																// loop
 				
 				System.out.println("OUTPUTS:");
-				//yValues = nn.ComputeOutputs(xValues);
+				yValues = nn.ComputeOutputs(xValues);
 				Helpers.ShowVector(yValues);
 				
 				Double error = Error(tValues, yValues);
@@ -248,13 +248,13 @@ public class NeuralNetworksProgram {
 				//Helpers.ShowVector(weights);
 				System.out.println("Computing new outputs:");
 				yValues = nn.ComputeOutputs(xValues);
-				Helpers.ShowVector(yValues);
+				//Helpers.ShowVector(yValues);
 				System.out.println("\nComputing new error");
 				error = Error(tValues, yValues);
 				System.out.println("Error = " + error);
 				++ctr;
 				System.out.println("OUTPUTS:");
-				//yValues = nn.ComputeOutputs(xValues);
+				yValues = nn.ComputeOutputs(xValues);
 				//Helpers.ShowVector(yValues);
 				
 			}

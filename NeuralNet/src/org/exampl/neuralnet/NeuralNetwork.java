@@ -176,10 +176,16 @@ class NeuralNetwork {
 		for (int i = 0; i < numOutput; ++i)
 			// determine hidden-to-output result
 			outputs[i] = SoftmaxFunction(new BigDecimal(hoSums[i]),hoSums);
-			
+		
+		double[] result = new double[numOutput];
+		for (int i = 0; i < numOutput; i++) {
+			result[i]=outputs[i];
+		}
+		
+		
 		//System.out.printf("NEW RESULTS: ",result);
 		//System.out.println("Debug");
-		return outputs;
+		return result;
 	} // ComputeOutputs
 
 	public void step1(double[] tValues){
@@ -189,8 +195,9 @@ class NeuralNetwork {
 	            {
 	             // BigDecimal derivative =(new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
 	             // oGrads[i] = derivative.multiply((tValues[i].subtract(outputs[i])));
-	            	double derivative = ((new BigDecimal(1).subtract(ihOutputs[i])).multiply(new BigDecimal(1).add(ihOutputs[i]))).doubleValue();
+	            	double derivative = ((new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i])).doubleValue();//derivative of softmax
 	            	oGrads[i]=derivative*(tValues[i]-outputs[i]);
+
 	            }
 	}
 	
@@ -211,8 +218,9 @@ class NeuralNetwork {
 	            double sum = 0.0;
 	            for (int j = 0; j < numOutput; j++) {
 	            	sum+=oGrads[j]*hoWeights[i][j];
-					hGrads[i]=derivative*(sum);
-				}
+	            }
+	            	hGrads[i]=derivative*(sum);
+				
 	            }
 //	        System.out.println("BIG DEC");
 //	        System.out.println(sum);
@@ -237,7 +245,7 @@ class NeuralNetwork {
 		      {
 		        for (int j = 0; j < ihWeights[0].length; ++j) // 0..3 (4)
 		        {
-		        	double delta2=eta*inputs[i];
+		        	double delta2=eta*hGrads[j]*inputs[i];
 		        	ihWeights[i][j] +=delta2;//ihWeights[i][j].add( new BigDecimal(delta2)); // update
 		          //BigDecimal delta = eta.multiply(hGrads[j]).multiply(inputs[i]); // compute the new delta
 		          //ihWeights[i][j] =ihWeights[i][j].add( delta); // update
