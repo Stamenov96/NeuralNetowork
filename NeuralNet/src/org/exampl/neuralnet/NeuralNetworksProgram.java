@@ -229,9 +229,9 @@ public class NeuralNetworksProgram {
 																// back-propagation
 																// loop
 				
-				System.out.println("OUTPUTS:");
-				yValues = nn.ComputeOutputs(xValues);
-				Helpers.ShowVector(yValues);
+				//System.out.println("OUTPUTS:");
+				//yValues = nn.ComputeOutputs(xValues);
+				//Helpers.ShowVector(yValues);
 				
 				Double error = Error(tValues, yValues);
 				System.out.println("ERRRORRR   "+error);
@@ -253,8 +253,8 @@ public class NeuralNetworksProgram {
 				error = Error(tValues, yValues);
 				System.out.println("Error = " + error);
 				++ctr;
-				System.out.println("OUTPUTS:");
-				yValues = nn.ComputeOutputs(xValues);
+				//System.out.println("OUTPUTS:");
+				//yValues = nn.ComputeOutputs(xValues);
 				//Helpers.ShowVector(yValues);
 				
 			}

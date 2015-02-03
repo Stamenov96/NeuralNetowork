@@ -156,9 +156,9 @@ class NeuralNetwork {
 		// System.out.println("hidden-to-output biases:");
 		// Helpers.ShowVector(this.hoBiases);
 
-		for (int i = 0; i < numOutput; ++i)
+		for (int i = 0; i < numOutput; ++i){
 			// add biases to input-to-hidden sums
-			hoSums[i] +=hoBiases[i];
+			hoSums[i] +=hoBiases[i];}
 
 		//System.out.println("hidden-to-output sums after adding h-o biases:");
 		//Helpers.ShowVector(hoSums);
@@ -173,10 +173,11 @@ class NeuralNetwork {
 //			+    return result;
 //		
 		
-		for (int i = 0; i < numOutput; ++i)
+		for (int i = 0; i < numOutput; ++i){
 			// determine hidden-to-output result
 			outputs[i] = SoftmaxFunction(new BigDecimal(hoSums[i]),hoSums);
-		
+		}
+			
 		double[] result = new double[numOutput];
 		for (int i = 0; i < numOutput; i++) {
 			result[i]=outputs[i];
@@ -213,8 +214,8 @@ class NeuralNetwork {
 	          //   hGrads[i] = derivative.multiply(sum);
 	          
 	            	
-	            	
 	            double derivative = ((new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i])).doubleValue();
+
 	            double sum = 0.0;
 	            for (int j = 0; j < numOutput; j++) {
 	            	sum+=oGrads[j]*hoWeights[i][j];
@@ -239,6 +240,9 @@ class NeuralNetwork {
 //	      }
 	}
 	
+
+	
+	
 	void step3(double eta, double alpha){
 		 // 3. update input to hidden weights (gradients must be computed right-to-left but weights can be updated in any order
 		      for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
@@ -260,7 +264,7 @@ class NeuralNetwork {
 		              //BigDecimal delta = eta.multiply(hGrads[i]).multiply(new BigDecimal(1.0)); // the 1.0 is the constant input for any bias; could leave out
 		              //ihBiases[i] = ihBiases[i].add(delta);
 		              //ihBiases[i] = ihBiases[i].add( alpha.multiply(ihPrevBiasesDelta[i]));
-		            	double delta = eta*(hGrads[i]);
+		            	double delta = eta*hGrads[i]*1.0;
 		            	ihBiases[i]+=delta;
 		            	ihBiases[i]+=alpha*ihPrevBiasesDelta[i];
 		            }
@@ -281,7 +285,7 @@ class NeuralNetwork {
 		         // hoWeights[i][j] = hoWeights[i][j].add( alpha.multiply(hoPrevWeightsDelta[i][j]));
 		         // hoPrevWeightsDelta[i][j] = delta;
 		        
-		        	double delta = (new BigDecimal(eta).multiply(new BigDecimal(oGrads[j])).multiply(ihOutputs[i])).doubleValue();
+		        	double delta = (new BigDecimal(eta).setScale(10, RoundingMode.HALF_UP).multiply(new BigDecimal(oGrads[j]).setScale(10, RoundingMode.HALF_UP)).multiply(ihOutputs[i]).setScale(10, RoundingMode.HALF_UP)).doubleValue();
 		        	hoWeights[i][j] += delta;
 		        	hoWeights[i][j] += alpha * hoPrevWeightsDelta[i][j];
 		        	hoPrevWeightsDelta[i][j] = delta;
@@ -380,8 +384,18 @@ class NeuralNetwork {
         ihBiases[i] = ihBiases[i].add( alpha.multiply(ihPrevBiasesDelta[i]));
       }*/
 
+      	for (int i = 200; i < 220; i++) {
+      		
+			System.out.println(ihBiases[i]);
+		}
+      
+      	System.out.println("-------------------");
       step3(eta, alpha);
-
+      for (int i = 200; i < 220; i++) {
+		System.out.println(ihBiases[i]);
+	}
+      
+      
       // 4. update hidden to output weights
    /*   for (int i = 0; i < hoWeights.length; ++i)  // 0..3 (4)
       {
