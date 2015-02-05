@@ -51,17 +51,14 @@ public class MNISTReader {
       System.exit(0);
     }
 
-    long start = System.currentTimeMillis();
+   // long start = System.currentTimeMillis();
     int numLabelsRead = 0;
     int numImagesRead = 0;
     int itter=0;
     double[] img= new double[numCols*numRows];
     while (labels.available() > 0 && numLabelsRead < 1) {
       byte label = labels.readByte();
-      System.out.print(label+" L ");
-      numLabelsRead++;
-      //int[][] image = new int[numCols][numRows];
-      
+      numLabelsRead++;      
       for (int colIdx = 0; colIdx < numCols; colIdx++) {
         for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
         //  image[colIdx][rowIdx] = images.readUnsignedByte();

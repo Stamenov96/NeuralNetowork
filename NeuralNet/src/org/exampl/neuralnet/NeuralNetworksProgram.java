@@ -89,8 +89,13 @@ public class NeuralNetworksProgram {
 				//System.out
 					//	.println("Using tanh function for hidden-to-output activation");
 				int numofinput =numCols*numRows;
+//				int numofhidden=/*4;*/1000;
+//				int numofoutput=/*2;*/10;
+
+				//int numofinput = 40;
 				int numofhidden=1000;
 				int numofoutput=10;
+				
 				NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden, numofoutput);
 
 //				double[] weights = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
@@ -106,7 +111,7 @@ public class NeuralNetworksProgram {
 				OutputStream fOut;
 				File file = new File(path, "statsText.txt"); // the File to save to
 				
-			//	if (!file.exists()&& !file.isFile()) {
+				if (!file.exists()&& !file.isFile()) {
 				
 				
 				try {
@@ -131,7 +136,7 @@ public class NeuralNetworksProgram {
 				}
 				
 				
-			//	}else{System.out.println("FILE EXISTS");}
+				}else{System.out.println("FILE EXISTS");}
 				
 				
 				/*File statText = new File("/home/stefo/Desktop/statsTest.txt");
@@ -179,6 +184,12 @@ public class NeuralNetworksProgram {
 				//System.out.println("\nSetting inputs:");
 				
 				double[] xValues = MNISTReader.main(args);
+//				double[] xValues = new double[] { 1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05,
+//						1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05,
+//						1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05,
+//						1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05
+//						};
+//				
 				//System.out.println("XVALSSSSSSSSSSSSSSSSSSSSSSS");
 				//Helpers.ShowVector(xValues);
 
@@ -189,12 +200,16 @@ public class NeuralNetworksProgram {
 				//Helpers.ShowVector(initialOutputs);
 
 				double[] tValues =new double[10];
-				//Arrays.fill(tValues,(Double) null);
 				for (int i = 0; i < tValues.length; i++) {
 					tValues[i]=0.0;
 				}
 				tValues[label-1]= 1;
 				
+//				System.out.println("TVALUES");
+//				Helpers.ShowVector(tValues);
+//				System.out.println("---------------");
+//				
+				//double[] tValues = new double[] { 0.0, 1,0,0,0,0,0,0,0,0 };
 				
 				
 				// target
@@ -212,10 +227,10 @@ public class NeuralNetworksProgram {
 				//System.out.println("Target outputs to learn are:");
 				//Helpers.ShowVector(tValues);
 
-				double eta = 0.8; // learning rate - controls the maginitude of
+				double eta = Math.pow(2, 65); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				double alpha = 0.04; // momentum - to discourage oscillation.
+				double alpha = 50000; // momentum - to discourage oscillation.
 										// found by trial and error.
 				//System.out.println("Setting learning rate (eta) = " + eta
 					//	+ " and momentum (alpha) = " + alpha);
@@ -229,15 +244,17 @@ public class NeuralNetworksProgram {
 																// back-propagation
 																// loop
 				
-				//System.out.println("OUTPUTS:");
+				System.out.println("OUTPUTS:");
 				//yValues = nn.ComputeOutputs(xValues);
-				//Helpers.ShowVector(yValues);
+				Helpers.ShowVector(yValues);
+				
+				System.out.println("===========-------------------===========================");
 				
 				Double error = Error(tValues, yValues);
 				System.out.println("ERRRORRR   "+error);
 				
-				while (ctr < 1000 && (error/*.compareTo(new BigDecimal(0.01))*/ > 0.01)) {
-				for (int i = 0; i < 2;i++) {
+				while (ctr < 1000 && (error > 0.01)) {
+				//for (int i = 0; i < 2;i++) {
 					
 				System.out
 						.println("===================================================");
@@ -257,7 +274,7 @@ public class NeuralNetworksProgram {
 				//yValues = nn.ComputeOutputs(xValues);
 				//Helpers.ShowVector(yValues);
 				
-			}
+			
 			}
 				System.out
 						.println("===================================================");
@@ -270,19 +287,17 @@ public class NeuralNetworksProgram {
 				double[] bestWeights = nn.GetWeights();
 				
 				
-//				try {
-//					FileWriter out = new FileWriter(file);
-//					for (int i = 0; i < bestWeights.length; i++) {
-//						out.write((bestWeights[i].toPlainString()) + "\n");
-//					}
-//				out.flush();
-//					out.close();
-//					
-//				} catch (IOException e) {
-//					System.out.println("weightsandbiases"+"Exception in saving"+e);
-//				}
-				
-				
+				try {
+										FileWriter out = new FileWriter(file);
+										for (int i = 0; i < bestWeights.length; i++) {
+											out.write(Double.toString(bestWeights[i]) + "\n");
+										}
+									out.flush();
+										out.close();
+										
+									} catch (IOException e) {
+										System.out.printf("weightsandbiases", "Exception in saving", e);
+									}
 				
 				//Helpers.ShowVector(bestWeights);
 

@@ -51,14 +51,9 @@ class NeuralNetwork {
 
       ihPrevWeightsDelta = Helpers.MakeMatrix(numInput, numHidden);
       ihPrevBiasesDelta = new double[numHidden];
-      for (int i = 0; i < ihPrevBiasesDelta.length; i++) {
-		ihPrevBiasesDelta[i]=0.0;
-	}
+
       hoPrevWeightsDelta = Helpers.MakeMatrix(numHidden, numOutput);
       hoPrevBiasesDelta = new double[numOutput];
-      for (int i = 0; i < hoPrevBiasesDelta.length; i++) {
-		hoPrevBiasesDelta[i]=0.0;
-	}
     }
 
 
@@ -190,30 +185,19 @@ class NeuralNetwork {
 	} // ComputeOutputs
 
 	public void step1(double[] tValues){
-	     // double[] oGrads2 = new double[oGrads.length];
+	   
 	            // 1. compute output gradients
 	            for (int i = 0; i < oGrads.length; ++i)
 	            {
-	             // BigDecimal derivative =(new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); //(1 - outputs[i]) * (1 + outputs[i]); // derivative of tanh
-	             // oGrads[i] = derivative.multiply((tValues[i].subtract(outputs[i])));
 	            	double derivative = ((new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i])).doubleValue();//derivative of softmax
 	            	oGrads[i]=derivative*(tValues[i]-outputs[i]);
-
 	            }
 	}
 	
 	public void step2(){
-	    //  double[] hGrads2 = new double[hGrads.length];
 	   // 2. compute hidden gradients
 	            for (int i = 0; i < hGrads.length; ++i)
-	            {
-	         //     BigDecimal derivative = (new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i]); // (1 / 1 + exp(-x))'  -- using output value of neuron
-	         //     BigDecimal sum = new BigDecimal(0.0);
-	         //     for (int j = 0; j < numOutput; ++j) // each hidden delta is the sum of numOutput terms
-	         //       sum =sum.add( oGrads[j].multiply(hoWeights[i][j])); // each downstream gradient * outgoing weight
-	          //   hGrads[i] = derivative.multiply(sum);
-	          
-	            	
+	            {            	
 	            double derivative = ((new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i])).doubleValue();
 
 	            double sum = 0.0;
@@ -384,17 +368,18 @@ class NeuralNetwork {
         ihBiases[i] = ihBiases[i].add( alpha.multiply(ihPrevBiasesDelta[i]));
       }*/
 
-      	for (int i = 200; i < 220; i++) {
+     /* 	for (int i = 200; i < 220; i++) {
       		
 			System.out.println(ihBiases[i]);
 		}
       
       	System.out.println("-------------------");
+      	*/
       step3(eta, alpha);
-      for (int i = 200; i < 220; i++) {
+    /*  for (int i = 200; i < 220; i++) {
 		System.out.println(ihBiases[i]);
 	}
-      
+    */  
       
       // 4. update hidden to output weights
    /*   for (int i = 0; i < hoWeights.length; ++i)  // 0..3 (4)
@@ -440,79 +425,26 @@ class NeuralNetwork {
     }
 
 	private  BigDecimal SigmoidFunction(BigDecimal ihSums2) {	
-//		 if (x < -45.0) return 0.0;
-//		  else if (x > 45.0) return 1.0;
-//		  else {
-		//setScale(1000, BigDecimal.ROUND_FLOOR);
-		//BigDecimal b = BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (new BigDecimal(-1).multiply(ihSums2).setScale(100,BigDecimal.ROUND_FLOOR))) ;
 		
 		double bb = Math.pow(Math.E,((-1)*(ihSums2.doubleValue())));
 		BigDecimal b = new BigDecimal(bb);
 		b=b.add(new BigDecimal(1));
-		//bb+=1;
-//		System.out.println("double");
-//		System.out.println(bbb);
-//		System.out.println("GOSHO:  ");
-//		System.out.println(b);
 //		
 		b=new BigDecimal(1).divide(b,MathContext.DECIMAL128);
-		//bb=1/bb;
-		//double constant = (double)1; 
-//		BigDecimal test = new BigDecimal(b);
-//		BigDecimal test2 = new BigDecimal(constant);
-//		BigDecimal test3= test.add(test2);
-//		//String w = test3.toString();
-		//Double value=Double.valueOf(w);
-		//double g = Double.parseDouble(w);
-		//BigDecimal bd = new BigDecimal(Double.toString(b));
-		//test3 = test3.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-		//double g = test3..doubleValue();
-		//BigDecimal bd = new BigDecimal(test3).setScale(2, RoundingMode.HALF_EVEN);
-		//test3.setScale(w.length(), RoundingMode.HALF_EVEN);
-		//double test4 = test3.doubleValue();
 
-		//double a  =(1.0 / (1.0 + Math.exp(-1*ihSums2)));//(1.0 / (1.0 + Math.exp(-x)));
 		 return b;
 	}
 
 	private double SoftmaxFunction(BigDecimal hoSums2, double[] hoSums3) {
 
-			//BigDecimal sum= new BigDecimal(0);
-			//for (int i = 0; i < hoSums3.length; i++) {
-			//	sum=sum.add(BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR),hoSums3[i].setScale(100, BigDecimal.ROUND_FLOOR)));
-			//}
 			double sum2 =0.0;
 			for(int i =0; i<hoSums3.length;i++){
 				sum2 = sum2 + (Math.pow(Math.E, hoSums3[i]));
 			}
-			/// sys sum stava
-			
-
-			
-			//System.out.println("===========sum==================");
-			//System.out.println(sum);
-			//BigDecimal b =BigDecimalMath.pow(new BigDecimal(Math.E).setScale(100, BigDecimal.ROUND_FLOOR), (hoSums2.setScale(100, BigDecimal.ROUND_FLOOR)));
-			//System.out.println("==========b==================");
 			double bb=Math.pow(Math.E, hoSums2.doubleValue());
 			
-			//BigDecimal sum = new BigDecimal(sum2);
-			//BigDecimal b = new BigDecimal(bb);
-			
-			// i za B vaji 
-			
-			//System.out.println(b);
-			//BigDecimal a  =b.divide(sum,MathContext.DECIMAL128);
-			
 			double a=bb/sum2;
-			//System.out.println("AZ SUM REZULTATA NA SOFTMAX FUNCTION");
-			//System.out.println(a);
-//			double bbb=bb/(sum2);
-//			System.out.println("double");
-//			System.out.println(bbb);
-//			//double gosho = sum.doubleValue();
-//			System.out.println("GOSHO:  ");
-//			System.out.println(a);
-//			
+
 			
 			return a;	
 		//}
