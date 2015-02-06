@@ -54,7 +54,31 @@ public class NeuralNetworksProgram {
 	   // long start = System.currentTimeMillis();
 	    int numLabelsRead = 0;
 	    int numImagesRead = 0;
-	    while (labels.available() > 0 && numLabelsRead < 1) {
+	    
+	    while (labels.available() >0 && numLabelsRead < 20) {
+	        byte label = labels.readByte();
+	       // System.out.print(label+" L ");
+	        numLabelsRead++;
+	        double[][] image = new double[numCols][numRows];
+	        double[] xValues = new double[numCols*numRows];
+	        int itter = 0;
+	        for (int colIdx = 0; colIdx < numCols; colIdx++) {
+	          for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
+	            image[colIdx][rowIdx] = images.readUnsignedByte();
+	            image[colIdx][rowIdx]= (image[colIdx][rowIdx]/255);
+	            xValues[itter]=image[colIdx][rowIdx];
+	            itter++;
+	          }
+	        }
+	        
+	        numImagesRead++;
+	      System.out.println("===========================================");
+	      System.out.printf(numImagesRead+" "+label);
+	      System.out.println("============================================================");
+	    
+	    
+	    
+	 /*   while (labels.available() > 0 && numLabelsRead < 1) {
 	      label = labels.readByte();
 	      System.out.print(label+" L ");
 	      numLabelsRead++;
@@ -67,7 +91,7 @@ public class NeuralNetworksProgram {
 //	        }
 //	      }
 	     // numImagesRead++;
-	    }
+	    }*/
 		
 		
 		
@@ -82,30 +106,13 @@ public class NeuralNetworksProgram {
 			try {
 				System.out.println("\nBegin Neural Network demo\n");
 
-				//System.out
-					//	.println("Creating a 3-input, 4-hidden, 2-output neural network");
-				//System.out
-					//	.println("Using sigmoid function for input-to-hidden activation");
-				//System.out
-					//	.println("Using tanh function for hidden-to-output activation");
 				int numofinput =numCols*numRows;
-//				int numofhidden=/*4;*/1000;
-//				int numofoutput=/*2;*/10;
 
-				//int numofinput = 40;
 				int numofhidden=1000;
 				int numofoutput=10;
 				
 				NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden, numofoutput);
 
-//				double[] weights = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
-//						0.7, 0.8, 0.9, 1.0, 1.1, 1.2, -2.0, -6.0, -1.0, -7.0,
-//						1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, -2.5, -5.0 };
-
-//				double[] weightsbase = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
-//						0.7, 0.8, 0.9, 1.0, 1.1, 1.2, -2.0, -6.0, -1.0, -7.0,
-//						1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, -2.5, -5.0 };
-//				
 				String path = "/home/stefo/Desktop/";
 				//String path = appDir.toString();
 				OutputStream fOut;
@@ -115,14 +122,8 @@ public class NeuralNetworksProgram {
 				
 				
 				try {
-					//fOut = new FileOutputStream(file);
 					FileWriter out = new FileWriter(file);
-					
 
-				/*	double[] weightsbase = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
-							0.7, 0.8, 0.9, 1.0, 1.1, 1.2, -2.0, -6.0, -1.0, -7.0,
-							1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, -2.5, -5.0 };*/
-					
 					int size = (numofinput * numofhidden) + numofhidden+(numofhidden * numofoutput) + numofoutput;
 					for (int i = 0; i < size; i++) {
 						double random = new Random().nextDouble();
@@ -139,15 +140,6 @@ public class NeuralNetworksProgram {
 				}else{System.out.println("FILE EXISTS");}
 				
 				
-				/*File statText = new File("/home/stefo/Desktop/statsTest.txt");
-				FileWriter out = new FileWriter(statText);
-				for (int i = 0; i < weightsbase.length; i++) {
-					out.write(Double.toString(weightsbase[i]) + "\n");
-				}
-				out.close();
-				*/
-				//System.out.println(file);
-				//System.out.println("<<<<<<<<<<<<<<<<<<<<<<");
 				
 				Scanner scan = new Scanner(file);
 				ArrayList<String> temps = new ArrayList<String>();
@@ -171,89 +163,34 @@ public class NeuralNetworksProgram {
 					weights[i]=a;
 				}
 				
-//				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>");
-//				Helpers.ShowVector(weights3);
-//				System.out.println("===================----------------------------======================");
-				
-				//System.out.println("\nWeights and biases are:");
-				//Helpers.ShowVector(weights);
-
-				//System.out.println("Loading neural network weights and biases");
 				nn.SetWeights(weights);
-
-				//System.out.println("\nSetting inputs:");
 				
-				double[] xValues = MNISTReader.main(args);
-//				double[] xValues = new double[] { 1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05,
-//						1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05,
-//						1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05,
-//						1.0, 2.0, 3.0,1.0, 2.0, 3.0,1.0, 2.0, 3.0,0.05
-//						};
-//				
-				//System.out.println("XVALSSSSSSSSSSSSSSSSSSSSSSS");
-				//Helpers.ShowVector(xValues);
-
-				//System.out.println("Loading inputs and computing outputs");
+				//double[] xValues = MNISTReader.main(args);
 				double[] initialOutputs = nn.ComputeOutputs(xValues);
-
-				//System.out.println("\nNeural network outputs are:");
-				//Helpers.ShowVector(initialOutputs);
-
 				double[] tValues =new double[10];
 				for (int i = 0; i < tValues.length; i++) {
 					tValues[i]=0.0;
 				}
-				tValues[label-1]= 1;
-				
-//				System.out.println("TVALUES");
-//				Helpers.ShowVector(tValues);
-//				System.out.println("---------------");
-//				
-				//double[] tValues = new double[] { 0.0, 1,0,0,0,0,0,0,0,0 };
-				
-				
-				// target
-																		// (desired)
-																		// values.
-																		// note
-																		// these
-																		// only
-																		// make
-																		// sense
-																		// for
-																		// tanh
-																		// output
-																		// activation
-				//System.out.println("Target outputs to learn are:");
-				//Helpers.ShowVector(tValues);
-
-				double eta = Math.pow(2, 65); // learning rate - controls the maginitude of
+				tValues[label]= 1;// target
+				double eta = Math.pow(2,55 /*58*/); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				double alpha = 50000; // momentum - to discourage oscillation.
+				double alpha = Math.pow(2,22);//90000; // momentum - to discourage oscillation.
 										// found by trial and error.
-				//System.out.println("Setting learning rate (eta) = " + eta
-					//	+ " and momentum (alpha) = " + alpha);
-
-//				System.out
-//						.println("\nEntering main back-propagation compute-update cycle");
-//				System.out
-//						.println("Stopping when sum absolute error <= 0.01 or 1,000 iterations\n");
 				int ctr = 0;
 				double[] yValues = nn.ComputeOutputs(xValues); // prime the
 																// back-propagation
 																// loop
 				
 				System.out.println("OUTPUTS:");
-				//yValues = nn.ComputeOutputs(xValues);
-				Helpers.ShowVector(yValues);
+				//Helpers.ShowVector(yValues);
 				
 				System.out.println("===========-------------------===========================");
 				
 				Double error = Error(tValues, yValues);
 				System.out.println("ERRRORRR   "+error);
 				
-				while (ctr < 1000 && (error > 0.01)) {
+				while (ctr < 500 && (error > 0.1)) {
 				//for (int i = 0; i < 2;i++) {
 					
 				System.out
@@ -281,7 +218,7 @@ public class NeuralNetworksProgram {
 				System.out.println("Error = " + error);
 				System.out.println("\nBest weights and biases found:");
 				System.out.println("otuputs : ");
-				Helpers.ShowVector(yValues);
+				//Helpers.ShowVector(yValues);
 				System.out.println("===================================================");
 				
 				double[] bestWeights = nn.GetWeights();
@@ -302,12 +239,15 @@ public class NeuralNetworksProgram {
 				//Helpers.ShowVector(bestWeights);
 
 				System.out.println("End Neural Network demo\n");
+				
 				// Console.ReadLine();
 			} catch (Exception ex) {
 				System.out.println("Fatal: " + ex);
 				// Console.ReadLine();
 			}
 		}
+	    }
+	    
 	} // Main
 
 	static double Error(double[] tValues, double[] yValues) // sum absolute error.
@@ -323,7 +263,7 @@ public class NeuralNetworksProgram {
 		for (int i = 0; i < tValues.length; ++i)
 			//sum =sum.add((tValues[i].subtract( yValues[i])).abs());
 			sum+=Math.abs(tValues[i]-yValues[i]);
-			
+
 		return sum;
 	}
 } // class NeuralNetworksProgram

@@ -24,8 +24,8 @@ public class MNISTReader {
   public static double[] main(String[] args) throws IOException {
 	  
 	  
-	  String imagess = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/train-images.idx3-ubyte";
-		String labelss = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/train-labels.idx1-ubyte";
+	String imagess = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/train-images.idx3-ubyte";
+	String labelss = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/train-labels.idx1-ubyte";
 		
 		
     DataInputStream labels = new DataInputStream(new FileInputStream(labelss));
@@ -61,23 +61,15 @@ public class MNISTReader {
       numLabelsRead++;      
       for (int colIdx = 0; colIdx < numCols; colIdx++) {
         for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
-        //  image[colIdx][rowIdx] = images.readUnsignedByte();
          img[itter] = images.readUnsignedByte();
          itter++;
         }
       }
       numImagesRead++;
     }
-      // At this point, 'label' and 'image' agree and you can do whatever you like with them.
-    //Helpers.ShowVector(img);
     for (int i = 0; i < img.length; i++) {
 		img[i]=img[i]/255;
-	}
-   // BigDecimal[] img2 = new BigDecimal[img.length];
-    //for (int i = 0; i < img.length; i++) {
-//		img2[i]=new BigDecimal(img[i]);
-	//}
-    
+	}    
     return img;
     
 
