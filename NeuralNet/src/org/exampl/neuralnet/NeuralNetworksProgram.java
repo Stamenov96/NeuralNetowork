@@ -62,7 +62,7 @@ public class NeuralNetworksProgram {
 		int ctr=0;
 		int stat = 0;
 
-		String path = "/home/stefo/Desktop/";
+		String path = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/";
 		//String path = appDir.toString();
 		OutputStream fOut;
 		File file = new File(path, "statsText.txt"); // the File to save to
@@ -115,9 +115,7 @@ public class NeuralNetworksProgram {
 		}
 		
 		
-		
-	for(int g=0;g<10;g++){	
-	    while (labels.available() >0 && numLabelsRead < 1000) {
+	    while (labels.available() >0 && numLabelsRead < 10000) {
 	        byte label = labels.readByte();
 	       // System.out.print(label+" L ");
 	        numLabelsRead++;
@@ -150,7 +148,7 @@ public class NeuralNetworksProgram {
 					tValues[i]=0.0;
 				}
 				tValues[label]= 1;// target
-				double eta = 0.001;//Math.pow(2,80 /*58*/); // learning rate - controls the maginitude of
+				double eta = 0.0015;//Math.pow(2,80 /*58*/); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
 				double alpha = 0.0004;//Math.pow(2,22);//90000; // momentum - to discourage oscillation.
@@ -160,11 +158,12 @@ public class NeuralNetworksProgram {
 																// back-propagation
 																// loop
 				
-				//System.out.println("OUTPUTS:");
-				//Helpers.ShowVector(yValues);
+				System.out.println("OUTPUTS:");
+				Helpers.ShowVector(yValues);
 				
 				System.out.println("===========-------------------===========================");
-			/*	int it=0;
+			
+					int it=0;
 				double max=0;
 				for (int i = 0; i < yValues.length; i++) {
 					if(max<yValues[i]){
@@ -179,9 +178,10 @@ public class NeuralNetworksProgram {
 				if(it==label){
 					stat++;
 				}
-			*/	
-				Double error = Error(tValues, yValues);
-				System.out.println("ERRRORRR   "+error);
+				
+				
+				//Double error = Error(tValues, yValues);
+				//System.out.println("ERRRORRR   "+error);
 				
 				//while (ctr < 500 && (error > 0.1)) {
 				//for (int i = 0; i < 2;i++) {
@@ -189,28 +189,16 @@ public class NeuralNetworksProgram {
 				System.out
 						.println("===================================================");
 				System.out.println("iteration = " + ctr);
-				System.out
-						.println("Updating weights and biases using back-propagation");
-				if(error>0.01){
-					nn.UpdateWeights(tValues, eta, alpha);
-				}
-				//Helpers.ShowVector(weights);
-				//System.out.println("Computing new outputs:");
-				//yValues = nn.ComputeOutputs(xValues);
-				//Helpers.ShowVector(yValues);
-				//System.out.println("\nComputing new error");
-				//error = Error(tValues, yValues);
-				//System.out.println("Error = " + error);
-				//++ctr;
-				//System.out.println("OUTPUTS:");
-				//yValues = nn.ComputeOutputs(xValues);
-				//Helpers.ShowVector(yValues);
-				
-			
+				//System.out
+					//	.println("Updating weights and biases using back-propagation");
+				//if(error>0.01){
+					//nn.UpdateWeights(tValues, eta, alpha);
+				//}
+
 			//}
 				System.out
 						.println("===================================================");
-				System.out.println("Error = " + error);
+				//System.out.println("Error = " + error);
 				System.out.println("\nBest weights and biases found:");
 				System.out.println("otuputs : ");
 				//Helpers.ShowVector(yValues);
@@ -228,7 +216,7 @@ public class NeuralNetworksProgram {
 				// Console.ReadLine();
 			}
 			
-			if (ctr==999 || ctr==5000 || ctr == 10000) {
+	/*		if (ctr==999 || ctr==5000 || ctr == 9999) {
 				double[] bestWeights = nn.GetWeights();
 				
 				
@@ -245,12 +233,11 @@ public class NeuralNetworksProgram {
 									}
 				System.out.println("BESTWEIGHTS SAVED");
 			}
-			
+			*/
 			ctr++;
 		
 	    }
-	}
-	    
+ 
 	 // double proc = stat/numImagesRead;
 	 //.out.printf("proc"+proc);
 	} // Main
