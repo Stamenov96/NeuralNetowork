@@ -59,9 +59,65 @@ public class NeuralNetworksProgram {
 		int numofhidden=1000;
 		int numofoutput=10;		
 		NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden, numofoutput);
+		int ctr=0;
+		int stat = 0;
 
-	    
-	    while (labels.available() >0 && numLabelsRead < numLabels) {
+		String path = "/home/stefo/Desktop/";
+		//String path = appDir.toString();
+		OutputStream fOut;
+		File file = new File(path, "statsText.txt"); // the File to save to
+		
+		if (!file.exists()&& !file.isFile()) {
+		
+		
+		try {
+			FileWriter out = new FileWriter(file);
+
+			int size = (numofinput * numofhidden) + numofhidden+(numofhidden * numofoutput) + numofoutput;
+			for (int i = 0; i < size; i++) {
+				double random = new Random().nextDouble();
+				out.write(random + "\n");
+			}
+			out.flush();
+			out.close();
+			
+		} catch (IOException e) {
+			System.out.println("ERROR");
+		}
+		
+		
+		}else{System.out.println("FILE EXISTS");}
+		
+		
+		
+		Scanner scan = new Scanner(file);
+		ArrayList<String> temps = new ArrayList<String>();
+
+		int count = 0;
+		while (scan.hasNext()) {
+			String line = scan.nextLine();
+			count++;
+		}
+		
+		Scanner newscan = new Scanner(file);
+		double[] weights = new double[count];
+		for (int i = 0; i < count; i++) {
+			String line = newscan.nextLine();
+			double a = Double.parseDouble(line);
+			weights[i]=a;
+		}
+		
+		try {
+			nn.SetWeights(weights);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	for(int g=0;g<10;g++){	
+	    while (labels.available() >0 && numLabelsRead < 1000) {
 	        byte label = labels.readByte();
 	       // System.out.print(label+" L ");
 	        numLabelsRead++;
@@ -88,65 +144,18 @@ public class NeuralNetworksProgram {
 				System.out.println("\nBegin Neural Network demo\n");
 
 
-				String path = "/home/stefo/Desktop/";
-				//String path = appDir.toString();
-				OutputStream fOut;
-				File file = new File(path, "statsText.txt"); // the File to save to
-				
-				if (!file.exists()&& !file.isFile()) {
-				
-				
-				try {
-					FileWriter out = new FileWriter(file);
-
-					int size = (numofinput * numofhidden) + numofhidden+(numofhidden * numofoutput) + numofoutput;
-					for (int i = 0; i < size; i++) {
-						double random = new Random().nextDouble();
-						out.write(random + "\n");
-					}
-					out.flush();
-					out.close();
-					
-				} catch (IOException e) {
-					System.out.println("ERROR");
-				}
-				
-				
-				}else{System.out.println("FILE EXISTS");}
-				
-				
-				
-				Scanner scan = new Scanner(file);
-				ArrayList<String> temps = new ArrayList<String>();
-
-				int count = 0;
-				while (scan.hasNext()) {
-					String line = scan.nextLine();
-					count++;
-				}
-				
-				Scanner newscan = new Scanner(file);
-				double[] weights = new double[count];
-				for (int i = 0; i < count; i++) {
-					String line = newscan.nextLine();
-					double a = Double.parseDouble(line);
-					weights[i]=a;
-				}
-				
-				nn.SetWeights(weights);
-				
 				//double[] initialOutputs = nn.ComputeOutputs(xValues);
 				double[] tValues =new double[10];
 				for (int i = 0; i < tValues.length; i++) {
 					tValues[i]=0.0;
 				}
 				tValues[label]= 1;// target
-				double eta = Math.pow(2,80 /*58*/); // learning rate - controls the maginitude of
+				double eta = 0.001;//Math.pow(2,80 /*58*/); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				double alpha = Math.pow(2,22);//90000; // momentum - to discourage oscillation.
+				double alpha = 0.0004;//Math.pow(2,22);//90000; // momentum - to discourage oscillation.
 										// found by trial and error.
-				int ctr = 0;
+			
 				double[] yValues = nn.ComputeOutputs(xValues); // prime the
 																// back-propagation
 																// loop
@@ -155,7 +164,22 @@ public class NeuralNetworksProgram {
 				//Helpers.ShowVector(yValues);
 				
 				System.out.println("===========-------------------===========================");
-				
+			/*	int it=0;
+				double max=0;
+				for (int i = 0; i < yValues.length; i++) {
+					if(max<yValues[i]){
+						max=yValues[i];
+						System.out.println("Max");
+						System.out.println(max);
+						it=i;
+					}
+					
+				}
+				System.out.printf("recognized as"+it);
+				if(it==label){
+					stat++;
+				}
+			*/	
 				Double error = Error(tValues, yValues);
 				System.out.println("ERRRORRR   "+error);
 				
@@ -164,11 +188,11 @@ public class NeuralNetworksProgram {
 					
 				System.out
 						.println("===================================================");
-				//System.out.println("iteration = " + ctr);
+				System.out.println("iteration = " + ctr);
 				System.out
 						.println("Updating weights and biases using back-propagation");
 				if(error>0.01){
-				nn.UpdateWeights(tValues, eta, alpha);
+					nn.UpdateWeights(tValues, eta, alpha);
 				}
 				//Helpers.ShowVector(weights);
 				//System.out.println("Computing new outputs:");
@@ -192,7 +216,20 @@ public class NeuralNetworksProgram {
 				//Helpers.ShowVector(yValues);
 				System.out.println("===================================================");
 				
-				/*double[] bestWeights = nn.GetWeights();
+
+				
+				//Helpers.ShowVector(bestWeights);
+
+				System.out.println("End Neural Network demo\n");
+				
+				// Console.ReadLine();
+			} catch (Exception ex) {
+				System.out.println("Fatal: " + ex);
+				// Console.ReadLine();
+			}
+			
+			if (ctr==999 || ctr==5000 || ctr == 10000) {
+				double[] bestWeights = nn.GetWeights();
 				
 				
 				try {
@@ -205,20 +242,17 @@ public class NeuralNetworksProgram {
 										
 									} catch (IOException e) {
 										System.out.printf("weightsandbiases", "Exception in saving", e);
-									}*/
-				
-				//Helpers.ShowVector(bestWeights);
-
-				System.out.println("End Neural Network demo\n");
-				
-				// Console.ReadLine();
-			} catch (Exception ex) {
-				System.out.println("Fatal: " + ex);
-				// Console.ReadLine();
+									}
+				System.out.println("BESTWEIGHTS SAVED");
 			}
+			
+			ctr++;
 		
 	    }
+	}
 	    
+	 // double proc = stat/numImagesRead;
+	 //.out.printf("proc"+proc);
 	} // Main
 
 	static double Error(double[] tValues, double[] yValues) // sum absolute error.

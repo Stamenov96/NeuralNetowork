@@ -184,13 +184,13 @@ class NeuralNetwork {
 		return result;
 	} // ComputeOutputs
 
-	public void step1(double[] bgp){
+	public void step1(double[] tValues){
 	   
 	            // 1. compute output gradients
 	            for (int i = 0; i < oGrads.length; ++i)
 	            {
-	            	double derivative = ((new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i])).doubleValue();//derivative of softmax
-	            	oGrads[i]=derivative*bgp[i];
+	            	double derivative = 1.0;//((new BigDecimal(1).subtract(ihOutputs[i])).multiply(ihOutputs[i])).doubleValue();//derivative of softmax
+	            	oGrads[i] = derivative * (tValues[i] - outputs[i]);
 	            }
 	}
 	
@@ -267,13 +267,13 @@ class NeuralNetwork {
 	}
 	
     
-    public void UpdateWeights(double[] bgp, double eta, double alpha) throws Exception // update the weights and biases using back-propagation, with target values, eta (learning rate), alpha (momentum)
+    public void UpdateWeights(double[] tValues, double eta, double alpha) throws Exception // update the weights and biases using back-propagation, with target values, eta (learning rate), alpha (momentum)
     {
       // assumes that SetWeights and ComputeOutputs have been called and so all the internal arrays and matrices have values (other than 0.0)
-      if (bgp.length != numOutput)
+      if (tValues.length != numOutput)
         throw new Exception("target values not same length as output in UpdateWeights");
 
-      step1(bgp);
+      step1(tValues);
 
 
       step2();
