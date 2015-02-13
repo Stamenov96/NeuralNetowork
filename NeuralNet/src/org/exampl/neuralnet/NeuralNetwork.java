@@ -84,106 +84,96 @@ class NeuralNetwork {
 	
 
 	public double[] ComputeOutputs(double[] xValues) throws Exception {
-		if (xValues.length != numInput)
-			throw new Exception("Inputs array length " + inputs.length
-					+ " does not match NN numInput value " + numInput);
-
-		for (int i = 0; i < numHidden; ++i)
-			ihSums[i] = 0.0;
+		 		if (xValues.length != numInput)
+					throw new Exception("Inputs array length " + inputs.length
+							+ " does not match NN numInput value " + numInput);
 		
+				for (int i = 0; i < numHidden; ++i)
+					ihSums[i] = 0.0;
+				
+				
+				for (int i = 0; i < numOutput; ++i)
+					hoSums[i] = 0.0;
+				
+				for (int i = 0; i < xValues.length; ++i)
+					// copy x-values to inputs
+					inputs[i] = xValues[i];
+				
+				//System.out.println("Inputs:");
+				//Helpers.ShowVector(this.inputs);
 		
-		for (int i = 0; i < numOutput; ++i)
-			hoSums[i] = 0.0;
-		
-		for (int i = 0; i < xValues.length; ++i)
-			// copy x-values to inputs
-			this.inputs[i] = xValues[i];
-		
-		// System.out.println("Inputs:");
-		// Helpers.ShowVector(this.inputs);
-
-//		 System.out.println("input-to-hidden weights:");
-//		 Helpers.ShowMatrix(this.ihWeights, -1);
-
-		for (int j = 0; j < numHidden; ++j){
-			// compute input-to-hidden weighted sums
-			for (int i = 0; i < numInput; ++i){
-				ihSums[j]+=this.inputs[i]*ihWeights[i][j];
-				//System.out.println(ihSums[j]+" += "+ inputs[i] + "*" +ihWeights[i][j]);
-			}
-	}
-		
-		
-		//System.out.println("input-to-hidden sums:");
-		//Helpers.ShowVector(this.ihSums);
-
-		// System.out.println("input-to-hidden biases:");
-		// Helpers.ShowVector(ihBiases);
-		
-		for (int i = 0; i < numHidden; ++i)
-			// add biases to input-to-hidden sums
-			ihSums[i] +=ihBiases[i];
-		
-		//System.out.println("\ninput-to-hidden sums after adding i-h biases:");
-		//Helpers.ShowVector(this.ihSums);
-
-		for (int i = 0; i < numHidden; ++i){
-			// determine input-to-hidden output
-			// ihOutputs[i] = StepFunction(ihSums[i]); // step function
-			//ihOutputs[i] = SigmoidFunction(new BigDecimal(ihSums[i]));
-			ihOutputs[i]=SigmoidFunction(new BigDecimal(ihSums[i]));
-		}
-		// System.out.println("\ninput-to-hidden outputs after sigmoid:");
-		// Helpers.ShowVector(this.ihOutputs);
-
-		// System.out.println("hidden-to-output weights:");
-		// Helpers.ShowMatrix(hoWeights, -1);
-		for (int j = 0; j < numOutput; ++j){
-			// compute hidden-to-output weighted sums
-			for (int i = 0; i < numHidden; ++i){
-				hoSums[j] +=(ihOutputs[i].multiply(new BigDecimal(hoWeights[i][j]))).doubleValue();
+				// System.out.println("input-to-hidden weights:");
+				// Helpers.ShowMatrix(this.ihWeights, -1);
+				
+				
+				
+				
+				for (int j = 0; j < numHidden; ++j){
+					// compute input-to-hidden weighted sums
+					for (int i = 0; i < numInput; ++i){
+						ihSums[j] += inputs[i] * ihWeights[i][j];
+						
+					}
+				//	System.out.println(ihSums[j]);
 				}
-			
-			}
-		// System.out.println("hidden-to-output sums:");
-		// Helpers.ShowVector(hoSums);
-
-		// System.out.println("hidden-to-output biases:");
-		// Helpers.ShowVector(this.hoBiases);
-
-		for (int i = 0; i < numOutput; ++i){
-			// add biases to input-to-hidden sums
-			hoSums[i] +=hoBiases[i];}
-
-		//System.out.println("hidden-to-output sums after adding h-o biases:");
-		//Helpers.ShowVector(hoSums);
-
+				
+				// System.out.println("input-to-hidden sums:");
+				// Helpers.ShowVector(this.ihSums);
 		
-//		for (int i = 0; i < numOutput; ++i)   // determine hidden-to-output result
-//			+      this.outputs[i] = HyperTanFunction(hoSums[i]);
-//			+
-//			+    double[] result = new double[numOutput];
-//			+    result = this.outputs;
-//			+    
-//			+    return result;
-//		
+				// System.out.println("input-to-hidden biases:");
+				// Helpers.ShowVector(ihBiases);
+				
+				for (int i = 0; i < numHidden; ++i){
+					// add biases to input-to-hidden sums
+					ihSums[i] += ihBiases[i];
+				//	System.out.println("--------");
+				//System.out.println(ihSums[i]);
+				}
+				//System.out.println("\ninput-to-hidden sums after adding i-h biases:");
+				//Helpers.ShowVector(this.ihSums);
+				//System.out.println(">>>>>>>>>>>>");
+				for (int i = 0; i < numHidden; ++i){
+					// determine input-to-hidden output
+					// ihOutputs[i] = StepFunction(ihSums[i]); // step function
+					ihOutputs[i] = SigmoidFunction(new BigDecimal(ihSums[i]));
+					//System.out.println(ihOutputs[i]);
+				}
+				// System.out.println("\ninput-to-hidden outputs after sigmoid:");
+				// Helpers.ShowVector(this.ihOutputs);
 		
-		for (int i = 0; i < numOutput; ++i){
-			// determine hidden-to-output result
-			outputs[i] = SoftmaxFunction(new BigDecimal(hoSums[i]),hoSums);
-		}
-			
-		double[] result = new double[numOutput];
-		for (int i = 0; i < numOutput; i++) {
-			result[i]=outputs[i];
-		}
+				// System.out.println("hidden-to-output weights:");
+				// Helpers.ShowMatrix(hoWeights, -1);
+		int a;
+				for (int j = 0; j < numOutput; ++j)
+					// compute hidden-to-output weighted sums
+					for (int i = 0; i < numHidden; ++i)
+						hoSums[j] += (ihOutputs[i].multiply(new BigDecimal(hoWeights[i][j]))).doubleValue();;
+				///System.out.println();
 		
+				// System.out.println("hidden-to-output sums:");
+				// Helpers.ShowVector(hoSums);
 		
-		//System.out.printf("NEW RESULTS: ",result);
-		//System.out.println("Debug");
-		return result;
-	} // ComputeOutputs
-
+				// System.out.println("hidden-to-output biases:");
+				// Helpers.ShowVector(this.hoBiases);
+		
+				for (int i = 0; i < numOutput; ++i)
+					// add biases to input-to-hidden sums
+					hoSums[i] += hoBiases[i];
+		
+				//System.out.println("hidden-to-output sums after adding h-o biases:");
+				//Helpers.ShowVector(this.hoSums);
+		
+				for (int i = 0; i < numOutput; ++i)
+					// determine hidden-to-output result
+					outputs[i] = SoftmaxFunction(new BigDecimal(hoSums[i]),hoSums);
+				
+				/*double[] result = new double[numOutput];
+				result = this.outputs;
+				*///System.out.printf("NEW RESULTS: ",result);
+				//System.out.println("Debug");
+				return outputs;
+			} // ComputeOutputs
+	
 	public void step1(double[] tValues){
 	   
 	            // 1. compute output gradients
@@ -306,11 +296,13 @@ class NeuralNetwork {
 	private  BigDecimal SigmoidFunction(BigDecimal ihSums2) {	
 		
 		double bb = Math.pow(Math.E,((-1)*(ihSums2.doubleValue())));
+		//double dd = Math.exp(-1 * ihSums2.doubleValue());
+		//double dd1 = dd+1;
 		BigDecimal b = new BigDecimal(bb);
 		b=b.add(new BigDecimal(1));
 //		
 		b=new BigDecimal(1).divide(b,MathContext.DECIMAL128);
-
+		//double dd2 = b.doubleValue();
 		 return b;
 	}
 
