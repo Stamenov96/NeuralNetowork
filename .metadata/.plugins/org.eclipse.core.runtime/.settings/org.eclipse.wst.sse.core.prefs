@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-task-tag-projects-already-scanned=Drawing,appcompat_v7,NeuralNet,MNIST
+task-tag-projects-already-scanned=appcompat_v7,NeuralNet,MNIST,DEMOBGP,DigitRecognition

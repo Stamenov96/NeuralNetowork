@@ -8,4 +8,5 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.exampl.neuralnet.NeuralNetworksProgram"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="NeuralNet"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xverify:none"/>
 </launchConfiguration>

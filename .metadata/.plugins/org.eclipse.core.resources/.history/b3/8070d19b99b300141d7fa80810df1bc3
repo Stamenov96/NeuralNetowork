@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Drawing</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="paint">Paint</string>
+    <string name="save">Save</string>
+    <string name="about_text">This application is an indoor Wi-Fi positioning system designed for shopping centers and other commercial buildings.The application provides accurate positioning indoors, where other positioning technologies are unavailable. The application provides maps of the buildings floors and list of the key points in the building like shops and restaurants. Requires Android 2.2 and up.</string>
+
+</resources>

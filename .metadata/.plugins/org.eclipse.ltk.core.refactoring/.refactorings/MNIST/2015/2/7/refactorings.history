@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 4 elements to &apos;DigitRecognition/src/org.elsys.digitRecognition&apos;&#x0A;- Original project: &apos;MNIST&apos;&#x0A;- Destination element: &apos;DigitRecognition/src/org.elsys.digitRecognition&apos;&#x0A;- Original elements:&#x0A;     t10k-labels.idx1-ubyte&#x0A;     train-labels.idx1-ubyte&#x0A;     train-images.idx3-ubyte&#x0A;     t10k-images.idx3-ubyte" description="Copy files" destination="=DigitRecognition/src&lt;org.elsys.digitRecognition" element1="src/org/nn/Mnist/t10k-labels.idx1-ubyte" element2="src/org/nn/Mnist/train-labels.idx1-ubyte" element3="src/org/nn/Mnist/train-images.idx3-ubyte" element4="src/org/nn/Mnist/t10k-images.idx3-ubyte" files="4" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1423921447800" units="0" version="1.0"/>
+</session>

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<item value="171" key="org.eclipse.jdt.debug.ui.jre_preference_page_context.columnWidth0"/>
+	<item value="1" key="org.eclipse.jdt.debug.ui.jre_preference_page_context.sortColumn"/>
+	<item value="223" key="org.eclipse.jdt.debug.ui.jre_preference_page_context.columnWidth1"/>
+	<item value="174" key="org.eclipse.jdt.debug.ui.jre_preference_page_context.columnWidth2"/>
 	<section name="org.eclipse.jdt.internal.debug.ui.ExpressionInformationControlCreator$ExpressionInformationControl">
 		<item value="500" key="SashWeightDetails"/>
 		<item value="500" key="SashWeightTree"/>
-		<item value="188" key="HEIGHT"/>
-		<item value="680" key="WIDTH"/>
+		<item value="184" key="HEIGHT"/>
+		<item value="618" key="WIDTH"/>
+	</section>
+	<section name="conditionHistory">
+	</section>
+	<section name="AddExceptionDialog">
+		<item value="true" key="uncaughtChecked"/>
+		<item value="true" key="caughtChecked"/>
 	</section>
 </section>

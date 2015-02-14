@@ -1,0 +1,94 @@
+package org.elsys.digitRecognition;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.view.View;
+
+public class NeuralNetworksProgram {
+
+	static int label;
+
+	public static void main(View view, Bitmap resized, String path)
+			throws IOException {
+
+		int numofinput = 28 * 28;
+		int numofhidden = 1000;
+		int numofoutput = 10;
+		NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden,
+				numofoutput);
+
+		File file = new File(path, "statsText.txt"); // the File to save to
+
+		System.out.println(path);
+		int size = (numofinput * numofhidden) + numofhidden
+				+ (numofhidden * numofoutput) + numofoutput;
+		System.out.println("NUM LINES" + size);
+
+		Scanner newscan = new Scanner(file);
+		double[] weights = new double[size];
+		for (int i = 0; i < size; i++) {
+			String line = newscan.nextLine();
+			double a = Double.parseDouble(line);
+			weights[i] = a;
+		}
+		System.out.println("BeforeSetWeights");
+
+		try {
+			nn.SetWeights(weights);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("AfterSetWeights");
+
+		resized = resized.copy(Config.ARGB_4444, true);
+
+		double[] xValues = new double[resized.getWidth() * resized.getHeight()];
+		int itter = 0;
+		for (int colIdx = 0; colIdx < resized.getWidth(); colIdx++) {
+			for (int rowIdx = 0; rowIdx < resized.getHeight(); rowIdx++) {
+				xValues[itter] = resized.getPixel(colIdx, rowIdx);
+				System.out.println(xValues[itter]);
+				// image[colIdx][rowIdx] = test.
+				// image[colIdx][rowIdx]= (image[colIdx][rowIdx]/255);
+				// xValues[itter]=image[colIdx][rowIdx];
+				itter++;
+			}
+		}
+
+		try {
+
+			double[] yValues = nn.ComputeOutputs(xValues); // prime the
+															// back-propagation
+															// loop
+
+			int it = 0;
+			double max = 0;
+			for (int i = 0; i < yValues.length; i++) {
+				if (max < yValues[i]) {
+					max = yValues[i];
+					// System.out.println("Max");
+					// System.out.println(max);
+					it = i;
+				}
+
+			}
+			System.out.printf("recognized as" + it);
+		} catch (Exception ex) {
+			System.out.println("Fatal: " + ex);
+		}
+
+	} // Main
+
+	static double Error(double[] tValues, double[] yValues) {
+		double sum = 0.0;
+		for (int i = 0; i < tValues.length; ++i)
+			sum += Math.abs(tValues[i] - yValues[i]);
+
+		return sum;
+	}
+}

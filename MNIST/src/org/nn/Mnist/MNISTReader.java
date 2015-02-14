@@ -53,20 +53,20 @@ public class MNISTReader {
     long start = System.currentTimeMillis();
     int numLabelsRead = 0;
     int numImagesRead = 0;
-    while (labels.available() > 0 && numLabelsRead < numLabels) {
+    while (labels.available() > 0 && numLabelsRead < 100) {
       byte label = labels.readByte();
-      System.out.print(label+" L ");
+     // System.out.print(label+" L ");
       numLabelsRead++;
-      int[][] image = new int[numCols][numRows];
+      double[][] image = new double[numCols][numRows];
       for (int colIdx = 0; colIdx < numCols; colIdx++) {
         for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
           image[colIdx][rowIdx] = images.readUnsignedByte();
+          image[colIdx][rowIdx]= (image[colIdx][rowIdx]/255);
         }
       }
       numImagesRead++;
-
-      // At this point, 'label' and 'image' agree and you can do whatever you like with them.
-
+      System.out.printf(label+"L ");
+      
       if (numLabelsRead % 10 == 0) {
         System.out.print(".");
       }
@@ -88,4 +88,21 @@ public class MNISTReader {
         .println("Read " + numLabelsRead + " samples in " + minutes + " m " + seconds + " s ");
   }
 
+
+public static void ShowMatrix(double[][] matrix, int numRows){
+    int ct = 0;
+    int MaxValue = 0;
+    if (numRows == -1) {numRows = MaxValue;} // if numRows == -1, show all rows
+    for (int i = 0; i < matrix.length && ct < numRows; ++i)
+    {
+      for (int j = 0; j < matrix[0].length; ++j)
+      {
+        if (matrix[i][j] >= 0.0) System.out.println(" "); // blank space instead of '+' sign
+        System.out.println(matrix[i][j]);
+      }
+      System.out.println("");
+      ++ct;
+    }
+    System.out.println("");
+  }
 }
