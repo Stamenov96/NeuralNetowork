@@ -12,13 +12,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.elsys.NeuralNet.NeuralNetworksProgram;
 import org.elsys.digitrecognition.R;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Bitmap.Config;
+import android.graphics.Paint.Join;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.view.View.OnClickListener;
 
 public class MainActivity extends ActionBarActivity implements OnClickListener {
-
+	final Context context = this;
 	static File appDir;
 	private DrawingView drawView;
 	// private ImageButton currPaint;
@@ -53,28 +64,81 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	
 	
 
-	public void onClick(View view) {
+	public void onClick(final View view) {
 
 		if (view.getId() == R.id.save_btn) {
-			// System.out.println(appDir+"APPP DIRRR");
-			String path = appDir.toString();
-			// System.out.println(path+"PATHHHHHHHH");
+			final String path = appDir.toString();
 			OutputStream fOut;
-			//File file = new File(path,(new Date().getTime()+".jpeg")); // the File to save to
 			File file = new File(path, "newpic.jpeg"); // the File to save to
+			File file2 = new File(path,"greyscale.jpeg");
 			try {
 				fOut = new FileOutputStream(file);
 
 				drawView.setDrawingCacheEnabled(true);
 				
 				Bitmap pictureBitmap = drawView.getDrawingCache();
-				Bitmap resized = Bitmap.createScaledBitmap(pictureBitmap, 28, 28, true);
+				final Bitmap resized = Bitmap.createScaledBitmap(pictureBitmap, 28, 28, true);
+				/*
 				resized.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
 				fOut.flush();
 				fOut.close();
+				*/
 				
-		
-				NeuralNetworksProgram.main(view,resized,path);
+				OutputStream fout2=new FileOutputStream(file2);
+				//resized = resized.copy(Config.RGB_565, true);
+				  final int height = resized.getHeight();
+			        final int width = resized.getWidth();
+
+			        final Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			        final Canvas c = new Canvas(bmpGrayscale);
+			        final Paint paint = new Paint();
+			        final ColorMatrix cm = new ColorMatrix();
+			        cm.setSaturation(0);
+			        final ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+			        paint.setColorFilter(f);
+			        c.drawBitmap(resized, 0, 0, paint);
+			        
+			        bmpGrayscale.compress(Bitmap.CompressFormat.JPEG, 100, fout2);
+				fout2.flush();
+				fout2.close();
+				
+				
+				
+			Runnable NN =new Runnable() {
+				        public void run() {
+								try {
+								int result= NeuralNetworksProgram.main(view,resized,path);
+								final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+								alert.setTitle("The handwrite is recognized as");
+								alert.setMessage(result);
+								alert.setNeutralButton("YES IT IS", new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,int id) {
+										dialog.cancel();
+										}
+									
+								});
+								AlertDialog alertDialog = alert.create();
+								alertDialog.show();
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							
+				        }
+				    };
+				    Thread neuralnet = new Thread(NN);
+					neuralnet.start();
+					try {
+						neuralnet.join();
+						System.out.println(Thread.currentThread().getName());
+						System.out.println(neuralnet.getName());
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
+					
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -86,9 +150,22 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(final Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		Runnable mainmen = new Runnable() {
+			public void run() {
+				getMenuInflater().inflate(R.menu.main, menu);
+				
+			}
+		};
+		Thread anotherone=new Thread(mainmen);
+		anotherone.start();
+		try {
+			anotherone.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 
 	}

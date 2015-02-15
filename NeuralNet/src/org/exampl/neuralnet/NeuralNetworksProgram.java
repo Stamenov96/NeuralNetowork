@@ -70,7 +70,7 @@ public class NeuralNetworksProgram {
 		int ctr=0;
 		int stat = 0;
 
-		String path = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/";
+		/*String path = "/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/NeuralNet/src/org/exampl/neuralnet/";
 		//String path = appDir.toString();
 		OutputStream fOut;
 		File file = new File(path, "statsText.txt"); // the File to save to
@@ -97,9 +97,9 @@ public class NeuralNetworksProgram {
 		
 		}else{System.out.println("FILE EXISTS");}
 		
+*/		
 		
-		
-		Scanner scan = new Scanner(file);
+	/*	Scanner scan = new Scanner(file);
 		ArrayList<String> temps = new ArrayList<String>();
 
 		int count = 0;
@@ -122,23 +122,24 @@ public class NeuralNetworksProgram {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+*/		
 		
 	    //while (labels.available() >0 && numLabelsRead < numLabels) {
 	        byte label = labels.readByte();
 	       // System.out.print(label+" L ");
 	        numLabelsRead++;
 	        double[][] image = new double[numCols][numRows];
-	        double[][] testimg=new double[test.getWidth()][test.getHeight()];
 	        double[] xValues = new double[test.getWidth()*test.getHeight()];
 	        int itter = 0;
-	        for (int colIdx = 0; colIdx < test.getWidth(); colIdx++) {
-	          for (int rowIdx = 0; rowIdx < test.getHeight(); rowIdx++) {
+	        for (int colIdx = 0; colIdx < numCols; colIdx++) {
+	          for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
 	            image[colIdx][rowIdx] = images.readUnsignedByte();
 	            image[colIdx][rowIdx]= (image[colIdx][rowIdx]/255);
 	            xValues[itter]=image[colIdx][rowIdx];
+	            System.out.printf(" "+xValues[itter]);
 	            itter++;
 	          }
+	          System.out.println("");
 	        }
 	        
 	      //  numImagesRead++;
@@ -147,7 +148,6 @@ public class NeuralNetworksProgram {
 	      //System.out.println("============================================================");
 	    
 	    
-		
 			try {
 				System.out.println("\nBegin Neural Network demo\n");
 
@@ -155,13 +155,13 @@ public class NeuralNetworksProgram {
 				//double[] initialOutputs = nn.ComputeOutputs(xValues);
 				//double[] tValues =new double[10];
 				//for (int i = 0; i < tValues.length; i++) {
-				//	tValues[i]=0.0;
+				//	tValues[i]=   ;
 			//	}
 				//tValues[label]= 1;// target
-				double eta = 0.0015;//Math.pow(2,80 /*58*/); // learning rate - controls the maginitude of
+				double eta =    015;//Math.pow(2,80 /*58*/); // learning rate - controls the maginitude of
 									// the increase in the change in weights.
 									// found by trial and error.
-				double alpha = 0.0004;//Math.pow(2,22);//90000; // momentum - to discourage oscillation.
+				double alpha =    004;//Math.pow(2,22);//90000; // momentum - to discourage oscillation.
 										// found by trial and error.
 			
 				
@@ -207,7 +207,7 @@ public class NeuralNetworksProgram {
 				System.out
 						.println("Updating weights and biases using back-propagation");
 				
-				//if(error>0.01){
+				//if(error>   1){
 				//	nn.UpdateWeights(tValues, eta, alpha);
 				//}
 				
@@ -281,7 +281,7 @@ public class NeuralNetworksProgram {
 	{
 		//System.out.println("TARGETS");
 		//Helpers.ShowVector(target);
-		double sum = 0.0;
+		double sum =0.0  ;
 		for (int i = 0; i < tValues.length; ++i)
 			//sum =sum.add((tValues[i].subtract( yValues[i])).abs());
 			sum+=Math.abs(tValues[i]-yValues[i]);

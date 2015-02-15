@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
-import org.elsys.digitRecognition.NeuralNetwork;
 
 public class Training {
 	static int label;
@@ -57,8 +56,8 @@ public class Training {
 				numofoutput);
 		int ctr = 0;
 
-		String path = "src/org/elsys/digitRecognition/";
-		File file = new File(path, "statsText2.txt"); // the File to save to
+		String path = "src/org/elsys/NeuralNet/";
+		File file = new File(path, "weightsandbiases2.txt"); // the File to save to
 
 		if (!file.exists() && !file.isFile()) {
 			try {

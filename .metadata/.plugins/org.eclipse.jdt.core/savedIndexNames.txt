@@ -8,6 +8,7 @@ INDEX VERSION 1.126+/home/stefo/Desktop/NeuralNetwork/NeuralNetowork/.metadata/.
 1862033453.index
 2913048097.index
 2033628785.index
+3493267006.index
 2064907913.index
 3413739884.index
 1270315800.index

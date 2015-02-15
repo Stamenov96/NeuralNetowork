@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.elsys.digitRecognition.NeuralNetwork;
 
 	public class Statistic {
 		
@@ -53,9 +52,8 @@ import org.elsys.digitRecognition.NeuralNetwork;
 			int ctr=0;
 			int stat = 0;
 
-			String path = "src/org/elsys/digitRecognition/";
-			//String path = appDir.toString();
-			File file = new File(path, "statsText.txt"); // the File to save to
+			String path = "src/org/elsys/NeuralNet/";
+			File file = new File(path, "weightsandbiases.txt"); // the File to save to
 			
 			if (!file.exists()&& !file.isFile()) {
 				System.out.println("Error : file 'weightsandbias.txt' is missing!");
