@@ -1,6 +1,6 @@
 package org.elsys.digitRecognition;
 
-import org.elsys.digitrecognition.R;
+import com.example.drawing.R;
 
 import android.app.Activity;
 

@@ -53,7 +53,7 @@ import java.util.Scanner;
 			int stat = 0;
 
 			String path = "src/org/elsys/NeuralNet/";
-			File file = new File(path, "weightsandbiases.txt"); // the File to save to
+			File file = new File(path, "weightsandbiases4.txt"); // the File to save to
 			
 			if (!file.exists()&& !file.isFile()) {
 				System.out.println("Error : file 'weightsandbias.txt' is missing!");
@@ -133,7 +133,7 @@ import java.util.Scanner;
 				ctr++;
 			
 			}
-		  double proc = (double)stat/(double)ctr;
+		  double proc = ((double)stat/(double)ctr)*100;
 		 System.out.printf("Percent of recognized digits is : "+proc);
 		} 
 

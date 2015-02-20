@@ -1,17 +1,13 @@
 package org.elsys.NeuralNet;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Bitmap.Config;
-import android.graphics.drawable.Drawable;
 import android.graphics.Color;
 import android.view.View;
-import android.widget.ImageView;
 
 public class NeuralNetworksProgram {
 
@@ -26,19 +22,18 @@ public class NeuralNetworksProgram {
 		NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden,
 				numofoutput);
 
-		File file = new File(path, "weightsandbiases.txt"); // the File to save to
+		File file = new File(path, "weightsandbiases.txt");
 
-		System.out.println(path);
 		int size = (numofinput * numofhidden) + numofhidden
 				+ (numofhidden * numofoutput) + numofoutput;
 		System.out.println("NUM LINES" + size);
 
 		Scanner newscan = new Scanner(file);
 		double[] weights = new double[size];
+		String line;
 		for (int i = 0; i < size; i++) {
-			String line = newscan.nextLine();
-			double a = Double.parseDouble(line);
-			weights[i] = a;
+			line = newscan.nextLine();
+			weights[i] = Double.parseDouble(line);
 		}
 
 		try {
@@ -78,17 +73,7 @@ public class NeuralNetworksProgram {
 						System.out.println(max);
 					}
 				}
-				System.out.printf("recognized as" + it);
-/*
-			}
-			
-		};
-		Thread recogn = new Thread(otuput);
-		recogn.start();
-		recogn.join();
-		
-		
-		System.out.println(recogn.getName());*/
+				System.out.println("recognized as" + it);
 				System.out.println("IN NNP");
 				System.out.println(Thread.currentThread().getName());
 				return it;

@@ -7,22 +7,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.elsys.NeuralNet.NeuralNetworksProgram;
-import org.elsys.digitrecognition.R;
+
+import com.example.drawing.R;
+
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Bitmap.Config;
-import android.graphics.Paint.Join;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
@@ -32,22 +34,17 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	final Context context = this;
 	static File appDir;
 	private DrawingView drawView;
-	// private ImageButton currPaint;
 	private ImageButton saveBtn;
-	//private ImageButton switchbtn;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		drawView = (DrawingView) findViewById(R.id.drawing);
 		
-
-         
-                
-     
-
+		
+		
+		drawView = (DrawingView) findViewById(R.id.drawing);
 		appDir = new File(Environment.getExternalStorageDirectory()
 				+ File.separator + "SaveDir");
 
@@ -67,28 +64,24 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 	public void onClick(final View view) {
 
 		if (view.getId() == R.id.save_btn) {
+	
+			
 			final String path = appDir.toString();
+			@SuppressWarnings("unused")
 			OutputStream fOut;
-			File file = new File(path, "newpic.jpeg"); // the File to save to
+			System.gc();
 			File file2 = new File(path,"greyscale.jpeg");
 			try {
-				fOut = new FileOutputStream(file);
-
+				
 				drawView.setDrawingCacheEnabled(true);
 				
 				Bitmap pictureBitmap = drawView.getDrawingCache();
 				final Bitmap resized = Bitmap.createScaledBitmap(pictureBitmap, 28, 28, true);
-				/*
-				resized.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-				fOut.flush();
-				fOut.close();
-				*/
 				
 				OutputStream fout2=new FileOutputStream(file2);
-				//resized = resized.copy(Config.RGB_565, true);
 				  final int height = resized.getHeight();
 			        final int width = resized.getWidth();
-
+			        System.gc();
 			        final Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			        final Canvas c = new Canvas(bmpGrayscale);
 			        final Paint paint = new Paint();
@@ -97,28 +90,19 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			        final ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
 			        paint.setColorFilter(f);
 			        c.drawBitmap(resized, 0, 0, paint);
-			        
+			       System.gc(); 
 			        bmpGrayscale.compress(Bitmap.CompressFormat.JPEG, 100, fout2);
 				fout2.flush();
 				fout2.close();
-				
 				
 				
 			Runnable NN =new Runnable() {
 				        public void run() {
 								try {
 								int result= NeuralNetworksProgram.main(view,resized,path);
-								final AlertDialog.Builder alert = new AlertDialog.Builder(context);
-								alert.setTitle("The handwrite is recognized as");
-								alert.setMessage(result);
-								alert.setNeutralButton("YES IT IS", new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,int id) {
-										dialog.cancel();
-										}
-									
-								});
-								AlertDialog alertDialog = alert.create();
-								alertDialog.show();
+								final TextView txtValue = (TextView) findViewById(R.id.rec_digit);
+								txtValue.setText(Integer.toString(result));
+								System.out.println("Setting text");
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -126,6 +110,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 							
 				        }
 				    };
+				    
+				    
+				    
 				    Thread neuralnet = new Thread(NN);
 					neuralnet.start();
 					try {

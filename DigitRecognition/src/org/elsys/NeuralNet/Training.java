@@ -57,7 +57,7 @@ public class Training {
 		int ctr = 0;
 
 		String path = "src/org/elsys/NeuralNet/";
-		File file = new File(path, "weightsandbiases2.txt"); // the File to save to
+		File file = new File(path, "weightsandbiases3.txt"); // the File to save to
 
 		if (!file.exists() && !file.isFile()) {
 			try {
@@ -97,6 +97,7 @@ public class Training {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+for (int st = 0; st < 2; st++) {
 
 		while (labels.available() > 0 && numLabelsRead < numLabels) {
 			byte label = labels.readByte();
@@ -165,7 +166,9 @@ public class Training {
 				double[] bestWeights = nn.GetWeights();
 
 				try {
-					FileWriter out = new FileWriter(file);
+					File file2 = new File(path, "weightsandbiases4.txt"); // the File to save to
+
+					FileWriter out = new FileWriter(file2);
 					for (int i = 0; i < bestWeights.length; i++) {
 						out.write(Double.toString(bestWeights[i]) + "\n");
 					}
@@ -180,7 +183,9 @@ public class Training {
 			}
 
 			ctr++;
-
+			
+			
+			}
 		}
 
 	} // Main

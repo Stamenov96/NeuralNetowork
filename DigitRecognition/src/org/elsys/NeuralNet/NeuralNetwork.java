@@ -57,28 +57,76 @@ public class NeuralNetwork {
     }
 
 
-	public void SetWeights(double[] weights) throws Exception
+	public void SetWeights(final double[] weights) throws Exception
     {
       // copy weights and biases in weights[] array to i-h weights, i-h biases, h-o weights, h-o biases
       int numWeights = (numInput * numHidden) + (numHidden * numOutput) + numHidden + numOutput;
       if (weights.length != numWeights)
         throw new Exception("The weights array length: " + weights.length + " does not match the total number of weights and biases: " + numWeights);
 
-      int k = 0; // points into weights param
+    //  int k = 0; // points into weights param
 
-      for (int i = 0; i < numInput; ++i)
-        for (int j = 0; j < numHidden; ++j)
-          ihWeights[i][j] = weights[k++];
+    Runnable first = new Runnable() {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			int k=0;
+			 for (int i = 0; i < numInput; ++i)
+			        for (int j = 0; j < numHidden; ++j)
+			          ihWeights[i][j] = weights[k++];
+		}
+	};  
+     
+	Runnable second = new Runnable() {
+		
+		@Override
+		public void run() {
+			int k = numInput*numHidden;
+		      for (int i = 0; i < numHidden; ++i)
+		          ihBiases[i] = weights[k++];
+		}
+	};
+     
+	Runnable third = new Runnable() {
+		
+		@Override
+		public void run() {
+			int k = (numInput*numHidden)+numHidden;
+			for (int i = 0; i < numHidden; ++i)
+		        for (int j = 0; j < numOutput; ++j)
+		          hoWeights[i][j] = weights[k++];
+			
+		}
+	};
 
-      for (int i = 0; i < numHidden; ++i)
-        ihBiases[i] = weights[k++];
-
-      for (int i = 0; i < numHidden; ++i)
-        for (int j = 0; j < numOutput; ++j)
-          hoWeights[i][j] = weights[k++];
-
-      for (int i = 0; i < numOutput; ++i)
-        hoBiases[i] = weights[k++];
+	Runnable fourth = new Runnable() {
+		
+		@Override
+		public void run() {
+			int k = (numInput*numHidden)+numHidden+(numHidden*numOutput);
+		    for (int i = 0; i < numOutput; ++i)
+		        hoBiases[i] = weights[k++];
+			
+		}
+	};
+      
+	Thread firstThread = new Thread(first);
+	Thread secondThread = new Thread(second);
+	Thread thirdThread = new Thread(third);
+	Thread fourthThread = new Thread(fourth);
+	
+	firstThread.start();
+	secondThread.start();
+	thirdThread.start();
+	fourthThread.start();
+	
+	firstThread.join();
+	secondThread.join();
+	thirdThread.join();
+	fourthThread.join();
+	
+	
     }
 
 	
@@ -96,17 +144,7 @@ public class NeuralNetwork {
 					hoSums[i] = 0.0;
 				
 				for (int i = 0; i < xValues.length; ++i)
-					// copy x-values to inputs
 					inputs[i] = xValues[i];
-				
-				//System.out.println("Inputs:");
-				//Helpers.ShowVector(this.inputs);
-		
-				// System.out.println("input-to-hidden weights:");
-				// Helpers.ShowMatrix(this.ihWeights, -1);
-				
-				
-				
 				
 				for (int j = 0; j < numHidden; ++j){
 					// compute input-to-hidden weighted sums
@@ -114,62 +152,28 @@ public class NeuralNetwork {
 						ihSums[j] += inputs[i] * ihWeights[i][j];
 						
 					}
-				//	System.out.println(ihSums[j]);
 				}
-				
-				// System.out.println("input-to-hidden sums:");
-				// Helpers.ShowVector(this.ihSums);
-		
-				// System.out.println("input-to-hidden biases:");
-				// Helpers.ShowVector(ihBiases);
-				
+						
 				for (int i = 0; i < numHidden; ++i){
-					// add biases to input-to-hidden sums
 					ihSums[i] += ihBiases[i];
-				//	System.out.println("--------");
-				//System.out.println(ihSums[i]);
 				}
-				//System.out.println("\ninput-to-hidden sums after adding i-h biases:");
-				//Helpers.ShowVector(this.ihSums);
-				//System.out.println(">>>>>>>>>>>>");
 				for (int i = 0; i < numHidden; ++i){
-					// determine input-to-hidden output
-					// ihOutputs[i] = StepFunction(ihSums[i]); // step function
 					ihOutputs[i] = SigmoidFunction(new BigDecimal(ihSums[i]));
-					//System.out.println(ihOutputs[i]);
 				}
-				// System.out.println("\ninput-to-hidden outputs after sigmoid:");
-				// Helpers.ShowVector(this.ihOutputs);
-		
-				// System.out.println("hidden-to-output weights:");
-				// Helpers.ShowMatrix(hoWeights, -1);
+				
 				for (int j = 0; j < numOutput; ++j)
-					// compute hidden-to-output weighted sums
 					for (int i = 0; i < numHidden; ++i)
 						hoSums[j] += (ihOutputs[i].multiply(new BigDecimal(hoWeights[i][j]))).doubleValue();;
-				///System.out.println();
-		
-				// System.out.println("hidden-to-output sums:");
-				// Helpers.ShowVector(hoSums);
-		
-				// System.out.println("hidden-to-output biases:");
-				// Helpers.ShowVector(this.hoBiases);
-		
+				
+				
+				
 				for (int i = 0; i < numOutput; ++i)
-					// add biases to input-to-hidden sums
 					hoSums[i] += hoBiases[i];
 		
-				//System.out.println("hidden-to-output sums after adding h-o biases:");
-				//Helpers.ShowVector(this.hoSums);
-		
+				
 				for (int i = 0; i < numOutput; ++i)
-					// determine hidden-to-output result
 					outputs[i] = SoftmaxFunction(new BigDecimal(hoSums[i]),hoSums);
 				
-				/*double[] result = new double[numOutput];
-				result = this.outputs;
-				*///System.out.printf("NEW RESULTS: ",result);
-				//System.out.println("Debug");
 				return outputs;
 			} // ComputeOutputs
 	
@@ -263,13 +267,8 @@ public class NeuralNetwork {
         throw new Exception("target values not same length as output in UpdateWeights");
 
       step1(tValues);
-
-
       step2();
-
-           step3(eta, alpha);
-
-      
+      step3(eta, alpha);
       step4(eta, alpha);
 
     }
@@ -295,13 +294,9 @@ public class NeuralNetwork {
 	private  BigDecimal SigmoidFunction(BigDecimal ihSums2) {	
 		
 		double bb = Math.pow(Math.E,((-1)*(ihSums2.doubleValue())));
-		//double dd = Math.exp(-1 * ihSums2.doubleValue());
-		//double dd1 = dd+1;
 		BigDecimal b = new BigDecimal(bb);
 		b=b.add(new BigDecimal(1));
-//		
 		b=new BigDecimal(1).divide(b,MathContext.DECIMAL128);
-		//double dd2 = b.doubleValue();
 		 return b;
 	}
 
@@ -312,12 +307,9 @@ public class NeuralNetwork {
 				sum2 = sum2 + (Math.pow(Math.E, hoSums3[i]));
 			}
 			double bb=Math.pow(Math.E, hoSums2.doubleValue());
-			
 			double a=bb/sum2;
 
-			
 			return a;	
-		//}
 	}
 
 } // class NeuralNetwork
