@@ -25,7 +25,16 @@ public class NewActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main2);
-            AssetManager assetManager = getAssets();
+          
+        
+       File appDir = new File(Environment.getExternalStorageDirectory()
+				+ File.separator + "SaveDir");
+
+		   if (!appDir.exists() && !appDir.isDirectory()) {
+				appDir.mkdirs();
+			}
+        
+        AssetManager assetManager = getAssets();
             String[] files = null;
                 try {
 					files = assetManager.list("");
@@ -34,11 +43,13 @@ public class NewActivity extends Activity {
 					e1.printStackTrace();
 				}
             for(String filename : files) {
-                InputStream in = null;
+            if(filename.equals("weightsandbiases.txt")){
+            	InputStream in = null;
                 OutputStream out = null;
                 try {
-                  in = assetManager.open(filename);
-                 
+                  in = assetManager.open("weightsandbiases.txt");
+                  System.out.println("THIS IS IN");
+                 System.out.println(in);
                   File outFile = new File(Environment.getExternalStorageDirectory()
             				+ File.separator + "SaveDir", filename);
                   out = new FileOutputStream(outFile);
@@ -63,6 +74,7 @@ public class NewActivity extends Activity {
                     }
                 }  
             }
+    		}
         }
         private void copyFile(InputStream in, OutputStream out) throws IOException {
             byte[] buffer = new byte[1024];
