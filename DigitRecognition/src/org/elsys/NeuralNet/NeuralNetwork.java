@@ -1,5 +1,6 @@
 package org.elsys.NeuralNet;
 
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -57,6 +58,7 @@ public class NeuralNetwork {
     }
 
 
+
 	public void SetWeights(final double[] weights) throws Exception
     {
       // copy weights and biases in weights[] array to i-h weights, i-h biases, h-o weights, h-o biases
@@ -64,13 +66,12 @@ public class NeuralNetwork {
       if (weights.length != numWeights)
         throw new Exception("The weights array length: " + weights.length + " does not match the total number of weights and biases: " + numWeights);
 
-    //  int k = 0; // points into weights param
+    //  k points into weights param
 
     Runnable first = new Runnable() {
 		
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			int k=0;
 			 for (int i = 0; i < numInput; ++i)
 			        for (int j = 0; j < numHidden; ++j)
@@ -128,7 +129,6 @@ public class NeuralNetwork {
 	
 	
     }
-
 	
 
 	public double[] ComputeOutputs(double[] xValues) throws Exception {
@@ -155,24 +155,31 @@ public class NeuralNetwork {
 				}
 						
 				for (int i = 0; i < numHidden; ++i){
+					// add ihBiases to input-to-hidden weighted sums
 					ihSums[i] += ihBiases[i];
 				}
 				for (int i = 0; i < numHidden; ++i){
+					// activation function 
 					ihOutputs[i] = SigmoidFunction(new BigDecimal(ihSums[i]));
 				}
 				
-				for (int j = 0; j < numOutput; ++j)
-					for (int i = 0; i < numHidden; ++i)
+				for (int j = 0; j < numOutput; ++j){
+					// compute hidden-to-output weighted sums
+					for (int i = 0; i < numHidden; ++i){
 						hoSums[j] += (ihOutputs[i].multiply(new BigDecimal(hoWeights[i][j]))).doubleValue();;
+					}
+				}
 				
 				
-				
-				for (int i = 0; i < numOutput; ++i)
+				for (int i = 0; i < numOutput; ++i){
+					// add ihBiases to input-to-hidden weighted sums
 					hoSums[i] += hoBiases[i];
-		
+				}
 				
-				for (int i = 0; i < numOutput; ++i)
+				for (int i = 0; i < numOutput; ++i){
+					//output function
 					outputs[i] = SoftmaxFunction(new BigDecimal(hoSums[i]),hoSums);
+				}
 				
 				return outputs;
 			} // ComputeOutputs
@@ -208,12 +215,12 @@ public class NeuralNetwork {
 	
 	void step3(double eta, double alpha){
 		 // 3. update input to hidden weights (gradients must be computed right-to-left but weights can be updated in any order
-		      for (int i = 0; i < ihWeights.length; ++i) // 0..2 (3)
+		      for (int i = 0; i < ihWeights.length; ++i) 
 		      {
-		        for (int j = 0; j < ihWeights[0].length; ++j) // 0..3 (4)
+		        for (int j = 0; j < ihWeights[0].length; ++j) 
 		        {
 		        	double delta2=eta*hGrads[j]*inputs[i];
-		        	ihWeights[i][j] +=delta2;//ihWeights[i][j].add( new BigDecimal(delta2)); // update
+		        	ihWeights[i][j] +=delta2;//update
 		        	ihWeights[i][j]+=alpha*ihPrevWeightsDelta[i][j];
 		        }
 		      }

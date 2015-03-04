@@ -14,6 +14,7 @@ import java.util.Scanner;
 		@SuppressWarnings("resource")
 		public static void main(String[] args) throws IOException {
 			
+			//prepare MNIST files
 			String imagess = "src/org/elsys/NeuralNet/t10k-images.idx3-ubyte";
 			String labelss = "src/org/elsys/NeuralNet/t10k-labels.idx1-ubyte";
 			
@@ -41,19 +42,18 @@ import java.util.Scanner;
 		      System.exit(0);
 		    }
 
-		   // long start = System.currentTimeMillis();
 		    int numLabelsRead = 0;
 		    int numImagesRead = 0;
 
 			int numofinput =numCols*numRows;
 			int numofhidden=1000;
 			int numofoutput=10;		
-			NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden, numofoutput);
+			NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden, numofoutput);// creates neural network
 			int ctr=0;
 			int stat = 0;
 
 			String path = "src/org/elsys/NeuralNet/";
-			File file = new File(path, "weightsandbiases4.txt"); // the File to save to
+			File file = new File(path, "weightsandbiases.txt"); // the File to save to
 			
 			if (!file.exists()&& !file.isFile()) {
 				System.out.println("Error : file 'weightsandbias.txt' is missing!");
@@ -104,9 +104,8 @@ import java.util.Scanner;
 					}
 					tValues[label]= 1;// target
 					
-					double[] yValues = nn.ComputeOutputs(xValues); // prime the
-																	// back-propagation
-																	// loop
+					double[] yValues = nn.ComputeOutputs(xValues); 
+					
 					System.out.println("===========-------------------===========================");
 			
 					int it=0;
@@ -115,11 +114,13 @@ import java.util.Scanner;
 						if(max<yValues[i]){
 							max=yValues[i];
 							it=i;
+							// biggest output value index a.k.a recognized value
 						}
 						
 					}
 					System.out.println("The " + label + " is recognized as "+ it);
 					if(it==label){
+						// chek if the recognized value is correct
 						stat++;
 					}
 				
@@ -133,7 +134,7 @@ import java.util.Scanner;
 				ctr++;
 			
 			}
-		  double proc = ((double)stat/(double)ctr)*100;
+		  double proc = ((double)stat/(double)ctr)*100; // caluclates recognition in functions
 		 System.out.printf("Percent of recognized digits is : "+proc);
 		} 
 

@@ -6,7 +6,11 @@
     <string name="action_settings">Settings</string>
     <string name="paint">Paint</string>
     <string name="save">Save</string>
-    <string name="about">SOME INFO ABOUT THIS APP</string>
+    <string name="about">This is an application for recognizing of handwritten digits.
+        				I has over 90% succes in recognition. 
+        				The neural net behind the interface is trained with MNIST dataset.
+        				For more accurate recognition please write an big-sized digit in the center of the screen.
+        				Application was created and designed by Stefan Stamenov, student in ELSYS Bulgaria. 	</string>
     <string name="title">Neural Network</string>
 
 </resources>

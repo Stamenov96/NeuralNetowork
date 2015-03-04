@@ -1,7 +1,6 @@
 package org.elsys.NeuralNet;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Scanner;
 
 
@@ -36,12 +35,14 @@ public class NeuralNetworksProgram {
 			weights[i] = Double.parseDouble(line);
 		}
 
+		System.out.println("BEFORE SETWEIGHTS");
 		try {
 			nn.SetWeights(weights);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("AFTER SETWEIGHTS");
 	
 	
 		double[] xValues = new double[resized.getWidth() * resized.getHeight()];
@@ -59,13 +60,13 @@ public class NeuralNetworksProgram {
 		}
 
 			System.out.println("BEFORE COMP.OUTP");
-			final double[] yValues = nn.ComputeOutputs(xValues); // prime the
-
-			System.out.println("AFTER COMP.OUTP");												// back-propagation
-															// loop
+			final double[] yValues = nn.ComputeOutputs(xValues); // computing output values
+			System.out.println("AFTER COMP.OUTP");			
+														
 				int it = 0;
 				double max = 0;
 				for (int i = 0; i < yValues.length; i++) {
+					// which element of output array is biggest and get his index
 					if (max < yValues[i]) {
 						max = yValues[i];
 						it = i;
@@ -76,7 +77,7 @@ public class NeuralNetworksProgram {
 				System.out.println("recognized as" + it);
 				System.out.println("IN NNP");
 				System.out.println(Thread.currentThread().getName());
-				return it;
+				return it;// return recognized value
 
 	} 
 }

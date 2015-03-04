@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -20,9 +19,7 @@ import org.elsys.NeuralNet.NeuralNetworksProgram;
 import com.example.drawing.R;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
@@ -42,15 +39,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		
-		
 		drawView = (DrawingView) findViewById(R.id.drawing);
 		appDir = new File(Environment.getExternalStorageDirectory()
 				+ File.separator + "SaveDir");
-
-		   if (!appDir.exists() && !appDir.isDirectory()) {
-				appDir.mkdirs();
-			}
 	        
 			saveBtn = (ImageButton) findViewById(R.id.save_btn);
 			saveBtn.setOnClickListener(this);
@@ -76,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 				drawView.setDrawingCacheEnabled(true);
 				
 				Bitmap pictureBitmap = drawView.getDrawingCache();
-				final Bitmap resized = Bitmap.createScaledBitmap(pictureBitmap, 28, 28, true);
+				final Bitmap resized = Bitmap.createScaledBitmap(pictureBitmap, 28, 28, true); // Save in SaveDir in 28x28px
 				
 				OutputStream fout2=new FileOutputStream(file2);
 				  final int height = resized.getHeight();
@@ -88,7 +79,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			        final ColorMatrix cm = new ColorMatrix();
 			        cm.setSaturation(0);
 			        final ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-			        paint.setColorFilter(f);
+			        paint.setColorFilter(f);//grayscale the pic
 			        c.drawBitmap(resized, 0, 0, paint);
 			       System.gc(); 
 			        bmpGrayscale.compress(Bitmap.CompressFormat.JPEG, 100, fout2);
@@ -99,9 +90,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 			Runnable NN =new Runnable() {
 				        public void run() {
 								try {
-								int result= NeuralNetworksProgram.main(view,resized,path);
+								int result= NeuralNetworksProgram.main(view,resized,path);//start the main neural network program
 								final TextView txtValue = (TextView) findViewById(R.id.rec_digit);
-								txtValue.setText(Integer.toString(result));
+								txtValue.setText(Integer.toString(result));// set result from NN to answer field
 								System.out.println("Setting text");
 								} catch (Exception e) {
 									// TODO Auto-generated catch block

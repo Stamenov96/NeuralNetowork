@@ -13,7 +13,8 @@ public class Training {
 	static int label;
 
 	public static void main(String[] args) throws IOException {
-
+		
+		//prepare MNIST dataset files
 		String imagess = "src/org/elsys/NeuralNet/train-images.idx3-ubyte";
 		String labelss = "src/org/elsys/NeuralNet/train-labels.idx1-ubyte";
 
@@ -53,20 +54,21 @@ public class Training {
 		int numofhidden = 1000;
 		int numofoutput = 10;
 		NeuralNetwork nn = new NeuralNetwork(numofinput, numofhidden,
-				numofoutput);
+				numofoutput);// create new neural network
 		int ctr = 0;
 
 		String path = "src/org/elsys/NeuralNet/";
-		File file = new File(path, "weightsandbiases3.txt"); // the File to save to
+		File file = new File(path, "weightsandbiases.txt"); // the File to save to
 
 		if (!file.exists() && !file.isFile()) {
 			try {
+				//creates a file with random value between -0.1 and 0.1 if
 				FileWriter out = new FileWriter(file);
 
 				int size = (numofinput * numofhidden) + numofhidden
 						+ (numofhidden * numofoutput) + numofoutput;
 				for (int i = 0; i < size; i++) {
-					double random = (new Random().nextDouble() * 2 - 1) * 0.1;
+					double random = (new Random().nextDouble() * 2 - 1) * 0.1; 
 					out.write(random + "\n");
 				}
 				out.flush();
@@ -83,7 +85,7 @@ public class Training {
 		int size = (numofinput * numofhidden) + numofhidden
 				+ (numofhidden * numofoutput) + numofoutput;
 
-		Scanner newscan = new Scanner(file);
+		Scanner newscan = new Scanner(file); // scan weights and biases from file
 		double[] weights = new double[size];
 		for (int i = 0; i < size; i++) {
 			String line = newscan.nextLine();
@@ -97,9 +99,9 @@ public class Training {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-for (int st = 0; st < 2; st++) {
 
 		while (labels.available() > 0 && numLabelsRead < numLabels) {
+			// read MNIST dataset
 			byte label = labels.readByte();
 			numLabelsRead++;
 			double[][] image = new double[numCols][numRows];
@@ -107,9 +109,9 @@ for (int st = 0; st < 2; st++) {
 			int itter = 0;
 			for (int colIdx = 0; colIdx < numCols; colIdx++) {
 				for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
-					image[colIdx][rowIdx] = images.readUnsignedByte();
+					image[colIdx][rowIdx] = images.readUnsignedByte(); //get colors from pixels
 					image[colIdx][rowIdx] = (image[colIdx][rowIdx] / 255);
-					xValues[itter] = image[colIdx][rowIdx];
+					xValues[itter] = image[colIdx][rowIdx];// set input values in array 
 					itter++;
 				}
 			}
@@ -126,16 +128,14 @@ for (int st = 0; st < 2; st++) {
 				}
 				tValues[label] = 1;// target
 				double eta = 0.0015;
-				; // learning rate - controls the maginitude of
+				 // learning rate - controls the maginitude of
 					// the increase in the change in weights.
 					// found by trial and error.
-				double alpha = 0.0004;// Math.pow(2,22);//90000; // momentum -
+				double alpha = 0.0004;// momentum -
 										// to discourage oscillation.
 										// found by trial and error.
 
-				double[] yValues = nn.ComputeOutputs(xValues); // prime the
-																// back-propagation
-																// loop
+				double[] yValues = nn.ComputeOutputs(xValues); 
 
 				System.out
 						.println("===========-------------------===========================");
@@ -148,7 +148,9 @@ for (int st = 0; st < 2; st++) {
 						.println("Updating weights and biases using back-propagation");
 
 				if (error > 0.01) {
+					// updating weights a.k.a backpropagation
 					nn.UpdateWeights(tValues, eta, alpha);
+					
 				}
 
 				System.out
@@ -162,11 +164,11 @@ for (int st = 0; st < 2; st++) {
 			}
 
 			if (ctr == 999 || ctr == 5000 || ctr == 10000 || ctr == 20000
-					|| ctr == 50000 || ctr == 59999) {
+					|| ctr == 50000 || ctr == 59999) { // save trained values in some control points
 				double[] bestWeights = nn.GetWeights();
 
 				try {
-					File file2 = new File(path, "weightsandbiases4.txt"); // the File to save to
+					File file2 = new File(path, "weightsandbiases.txt"); // the File to save to
 
 					FileWriter out = new FileWriter(file2);
 					for (int i = 0; i < bestWeights.length; i++) {
@@ -186,12 +188,10 @@ for (int st = 0; st < 2; st++) {
 			
 			
 			}
-		}
 
 	} // Main
 
-	static double Error(double[] tValues, double[] yValues) // sum absolute
-															// error.
+	static double Error(double[] tValues, double[] yValues) // calculates error
 	{
 		double sum = 0.0;
 		for (int i = 0; i < tValues.length; ++i)
